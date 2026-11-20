@@ -1,5 +1,4 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: theme script for prerendered pages.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +37,6 @@ import { makeStyleTag } from './styles/styles';
 import TOC from './transforms/toc';
 import Typeset from './transforms/typeset';
 import Polyfills from './transforms/polyfills';
-import Theme from './transforms/theme';
 import CitationList from './transforms/citation-list';
 import Reorder from './transforms/reorder';
 
@@ -51,7 +49,6 @@ const transforms = new Map([
   ['Mathematics', Mathematics],
   ['Meta', Meta],
   ['Typeset', Typeset],
-  ['Theme', Theme],
   ['Polyfills', Polyfills],
   ['CitationList', CitationList],
   ['Reorder', Reorder] // keep last

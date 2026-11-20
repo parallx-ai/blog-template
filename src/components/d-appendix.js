@@ -58,24 +58,31 @@ d-appendix h3 + * {
   }
 }
 
+/* Numbers start on the text edge, like the rest of the appendix, and the
+   item text hangs at a fixed indent after them. */
 d-appendix ol {
-  padding: 0 0 0 15px;
+  list-style: none;
+  counter-reset: plx-item;
+  padding: 0;
+  margin-left: 0;
 }
 
-@media (min-width: 768px) {
-  d-appendix ol {
-    padding: 0 0 0 30px;
-    margin-left: -30px;
-  }
+d-appendix ol > li {
+  counter-increment: plx-item;
+  position: relative;
+  padding-left: 2em;
+}
+
+d-appendix ol > li::before {
+  content: counter(plx-item) ".";
+  position: absolute;
+  left: 0;
+  color: var(--plx-ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 d-appendix li {
   margin-bottom: 1em;
-}
-
-d-appendix li::marker {
-  color: var(--plx-ink-2);
-  font-variant-numeric: tabular-nums;
 }
 
 d-appendix a {

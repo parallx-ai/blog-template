@@ -1,6 +1,6 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: Parallax syntax theme (replaces the
-// default Prism theme, which has no dark variant).
+// Modifications copyright 2026 Parallax: Parallax syntax theme on a dark
+// panel (replaces the default Prism theme).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,72 +57,75 @@ pre code {
   overflow-x: auto;
   font-size: 14px;
   line-height: 1.6;
-  padding: 1em 1.25em;
-  border-left: 2px solid var(--plx-gold);
-  border-radius: 0 4px 4px 0;
+  padding: 1.1em 1.4em;
+  color: var(--plx-code-text);
+  background: var(--plx-code-bg);
+  border-radius: 6px;
 }
 
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
+/* Highlighting colours are for the dark block panel; inline code stays
+   in plain ink on paper. */
+pre .token.comment,
+pre .token.prolog,
+pre .token.doctype,
+pre .token.cdata {
   color: var(--plx-code-comment);
   font-style: italic;
 }
 
-.token.punctuation,
-.token.operator,
-.token.entity,
-.token.url {
+pre .token.punctuation,
+pre .token.operator,
+pre .token.entity,
+pre .token.url {
   color: var(--plx-code-punctuation);
 }
 
-.token.namespace {
+pre .token.namespace {
   opacity: 0.75;
 }
 
-.token.property,
-.token.boolean,
-.token.number,
-.token.constant,
-.token.symbol,
-.token.deleted {
+pre .token.property,
+pre .token.boolean,
+pre .token.number,
+pre .token.constant,
+pre .token.symbol,
+pre .token.deleted {
   color: var(--plx-code-number);
 }
 
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
+pre .token.selector,
+pre .token.attr-name,
+pre .token.string,
+pre .token.char,
+pre .token.builtin,
+pre .token.inserted {
   color: var(--plx-code-string);
 }
 
-.token.atrule,
-.token.attr-value,
-.token.keyword {
+pre .token.atrule,
+pre .token.attr-value,
+pre .token.keyword {
   color: var(--plx-code-keyword);
 }
 
-.token.function,
-.token.class-name {
+pre .token.function,
+pre .token.class-name {
   color: var(--plx-code-function);
 }
 
-.token.tag,
-.token.regex,
-.token.important,
-.token.variable {
+pre .token.tag,
+pre .token.regex,
+pre .token.important,
+pre .token.variable {
   color: var(--plx-code-tag);
 }
 
-.token.important,
-.token.bold {
+pre .token.important,
+pre .token.bold {
   font-weight: 600;
 }
 
-.token.italic {
+pre .token.italic {
   font-style: italic;
 }
 </style>

@@ -57,14 +57,6 @@ const T = Template('d-interstitial', `
   margin-bottom: 3em;
 }
 
-.logo-light {
-  display: var(--plx-show-on-light, block);
-}
-
-.logo-dark {
-  display: var(--plx-show-on-dark, none);
-}
-
 h1 {
   font-family: var(--plx-font-display);
   font-size: 32px;
@@ -115,8 +107,7 @@ p small {
 
 <div class="overlay">
   <div class="container">
-    <img class="logo logo-light" src="${logos.wordmarkOnLight}" alt="Parallax">
-    <img class="logo logo-dark" src="${logos.wordmarkOnDark}" alt="" aria-hidden="true">
+    <img class="logo" src="${logos.wordmarkOnLight}" alt="Parallax">
     <h1>This article is in review.</h1>
     <p>Do not share this URL or the contents of this article. Thank you!</p>
     <input id="interstitial-password-input" type="password" name="password" aria-label="Review password" autofocus/>

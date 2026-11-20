@@ -4,12 +4,7 @@
  * Mirrors the tokens of www.parallx.ai (src/styles/global.css in
  * parallx-ai/parallx-ai.github.io), namespaced with --plx- so they cannot
  * collide with an article's own CSS. Article authors can use them too, e.g.
- * `fill: var(--plx-gold)` in a figure, and they follow the reader's theme.
- *
- * Dark mode is class based, like the website: `html.dark` is set before
- * first paint from localStorage "theme" (shared with parallx.ai) or the
- * system preference, and toggled from the header. Pages that must stay in
- * one theme can set <html data-theme="light"> (or "dark").
+ * `fill: var(--plx-gold)` in a figure. Articles use the light theme only.
  */
 
 :root {
@@ -42,17 +37,17 @@
      itself only reaches 3.3:1, below WCAG AA for body text. */
   --plx-gold-ink: #896600;
 
-  /* Transparent figure images sit on this plate (cream in dark mode). */
-  --plx-figure-plate: transparent;
-
-  /* Syntax highlighting, from the plxviz palette; each 4.5:1 or more on paper. */
-  --plx-code-comment: #606a63;
-  --plx-code-keyword: #896600;
-  --plx-code-string: #547362;
-  --plx-code-number: #48708a;
-  --plx-code-function: #7a638b;
-  --plx-code-tag: #a6553e;
-  --plx-code-punctuation: #606a63;
+  /* Code blocks: a dark panel in the footer's ink, with the plxviz palette
+     lightened for it (each 6.5:1 or more). Inline code stays on paper. */
+  --plx-code-bg: #151c19;
+  --plx-code-text: #eff1e9;
+  --plx-code-comment: #a9b0aa;
+  --plx-code-keyword: #d7aa3d;
+  --plx-code-string: #87a795;
+  --plx-code-number: #7ba5c0;
+  --plx-code-function: #ae96c1;
+  --plx-code-tag: #de896f;
+  --plx-code-punctuation: #a9b0aa;
 
   /* Type. Display type is the bookish system-serif stack of parallx.ai, with
      Palatino clones ahead of Georgia so Linux and Android get the same feel. */
@@ -62,45 +57,4 @@
 
   /* Layout */
   --plx-nav-height: 76px;
-
-  /* Swap light/dark artwork, also inside shadow DOM:
-     display: var(--plx-show-on-light) / var(--plx-show-on-dark). */
-  --plx-show-on-light: block;
-  --plx-show-on-dark: none;
-}
-
-@media screen {
-  html.dark {
-    color-scheme: dark;
-
-    --plx-cream: #111411;
-    --plx-paper: #171c19;
-    --plx-paper-2: #202722;
-
-    --plx-ink: #eff1e9;
-    --plx-ink-1: #cbd0c9;
-    --plx-ink-2: #a9b0aa;
-    --plx-ink-3: #757e77;
-
-    --plx-rule: #343c36;
-    --plx-rule-soft: #272e29;
-
-    --plx-gold: #d7aa3d;
-    --plx-gold-deep: #e8c97a;
-    --plx-gold-soft: #f1dda5;
-    --plx-gold-ink: #e8c97a;
-
-    --plx-figure-plate: #f4f1ea;
-
-    --plx-code-comment: #a9b0aa;
-    --plx-code-keyword: #d7aa3d;
-    --plx-code-string: #87a795;
-    --plx-code-number: #7ba5c0;
-    --plx-code-function: #ae96c1;
-    --plx-code-tag: #de896f;
-    --plx-code-punctuation: #a9b0aa;
-
-    --plx-show-on-light: none;
-    --plx-show-on-dark: block;
-  }
 }

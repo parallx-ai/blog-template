@@ -1,5 +1,4 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: theme toggle.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,29 +13,11 @@
 // limitations under the License.
 
 import { Template } from '../mixins/template';
-import { isDark, toggleTheme, THEME_CHANGE_EVENT } from '../helpers/theme';
 
 import {headerTemplate} from './distill-header-template';
 
 const T = Template('distill-header', headerTemplate, false);
 
 export class DistillHeader extends T(HTMLElement) {
-
-  connectedCallback() {
-    // Inserts the template, unless the header was prerendered.
-    super.connectedCallback();
-
-    const toggle = this.querySelector('.theme-toggle');
-    if (!toggle || toggle.hasAttribute('data-bound')) return;
-    toggle.setAttribute('data-bound', '');
-
-    const sync = () => toggle.setAttribute('aria-pressed', String(isDark()));
-    toggle.addEventListener('click', () => {
-      toggleTheme();
-      sync();
-    });
-    document.addEventListener(THEME_CHANGE_EVENT, sync);
-    sync();
-  }
 
 }

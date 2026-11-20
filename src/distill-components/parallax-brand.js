@@ -21,10 +21,9 @@
 import wordmarkOnLight from '../assets/parallax/wordmark-light.webp';
 import wordmarkOnDark from '../assets/parallax/wordmark-dark.webp';
 import markOnLight from '../assets/parallax/mark-light-bg.webp';
-import markOnDark from '../assets/parallax/mark-dark-bg.webp';
 import footerInk from '../assets/parallax/footer-ink.webp';
 
-export const logos = { wordmarkOnLight, wordmarkOnDark, markOnLight, markOnDark };
+export const logos = { wordmarkOnLight, wordmarkOnDark, markOnLight };
 export const textures = { footerInk };
 
 export const SITE_URL = 'https://www.parallx.ai/';
@@ -81,12 +80,6 @@ export const socials = [
     icon: '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 7 8.08 5.13a1.75 1.75 0 0 0 1.84 0L21 7"/></g>',
   },
 ];
-
-// The website's moon and sun icons for the theme toggle.
-export const themeIcons = {
-  moon: '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-  sun: '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
-};
 
 // Mask for the footer's top edge, from src/assets/hero/watercolor-edge.svg.
 const watercolorEdge = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none"><defs><filter id="paper-edge" x="-10%" y="-30%" width="120%" height="160%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.022 0.04" numOctaves="3" seed="12" result="grain"/><feDisplacementMap in="SourceGraphic" in2="grain" scale="22" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="2.5"/></filter><linearGradient id="bleed" x2="0" y2="1"><stop stop-color="white" stop-opacity="0"/><stop offset="0.06" stop-color="white" stop-opacity="0.6"/><stop offset="0.14" stop-color="white"/></linearGradient></defs><path d="M-100 36C115 68 243 12 410 31S682 72 888 36 1227 22 1540 46V550H-100Z" fill="url(#bleed)" filter="url(#paper-edge)"/></svg>';

@@ -1,6 +1,6 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: theme before first paint,
-// self-hosted fonts and the Parallax favicon.
+// Modifications copyright 2026 Parallax: self-hosted fonts and the
+// Parallax favicon.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import { domContentLoaded } from './helpers/domContentLoaded.js';
 import { makeStyleTag }    from './styles/styles';
 import { Polyfills }       from './helpers/polyfills';
 
-/* Parallax theme, fonts and favicon */
-import { initTheme }       from './helpers/theme';
+/* Parallax fonts and favicon */
 import { addFonts }        from './helpers/fonts';
 import { logos }           from './distill-components/parallax-brand';
 
@@ -52,9 +51,8 @@ import { DistillHeader }   from './distill-components/distill-header';
 import { DistillAppendix } from './distill-components/distill-appendix';
 import { DistillFooter }   from './distill-components/distill-footer';
 
-/* Apply the reader's theme and start loading Inter straight away, while the
-   template script runs in <head>, so the page never flashes the wrong theme. */
-initTheme();
+/* Start loading Inter straight away, while the template script runs in
+   <head>. */
 addFonts(document);
 
 function addFavicon() {

@@ -144,22 +144,6 @@ figure img {
   width: 100%;
 }
 
-/* In dark mode, images with transparent backgrounds would put dark ink on a
-   dark page, so article images sit on a cream plate. Add `no-plate` to an
-   image (or its figure) that is drawn for dark backgrounds. */
-d-title img,
-d-article img,
-d-appendix img {
-  background-color: var(--plx-figure-plate);
-}
-
-d-title .no-plate img,
-d-article .no-plate img,
-d-appendix .no-plate img,
-img.no-plate {
-  background-color: transparent;
-}
-
 figcaption,
 .figcaption {
   font-family: var(--plx-font-body);
@@ -182,22 +166,6 @@ figure.external img {
   box-shadow: 0 1px 8px rgba(17, 20, 17, 0.08);
   padding: 18px;
   box-sizing: border-box;
-}
-
-/* Show an element in one theme only, e.g. a light and a dark render of the
-   same chart. Print always uses the light version. */
-.only-dark {
-  display: none !important;
-}
-
-@media screen {
-  html.dark .only-light {
-    display: none !important;
-  }
-
-  html.dark .only-dark {
-    display: revert !important;
-  }
 }
 
 figcaption a {

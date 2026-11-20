@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { logos, nav, themeIcons, SITE_URL } from './parallax-brand';
+import { logos, nav, SITE_URL } from './parallax-brand';
 
 // Same structure and measurements as SiteNav.astro: sticky, 76px tall,
-// translucent cream with a blur, wordmark on the left, About, a gold
-// "Join us" pill and the theme toggle on the right.
+// translucent cream with a blur, wordmark on the left, About and a gold
+// "Join us" pill on the right. (The website's light/dark toggle is left
+// out: articles use the light theme only.)
 export const headerTemplate = `
 <style>
 distill-header {
@@ -65,15 +66,6 @@ distill-header .logo img {
   height: auto;
   background: none;
 }
-distill-header .logo .on-dark {
-  display: none;
-}
-html.dark distill-header .logo .on-light {
-  display: none;
-}
-html.dark distill-header .logo .on-dark {
-  display: block;
-}
 distill-header .nav {
   display: flex;
   align-items: center;
@@ -118,40 +110,6 @@ distill-header .join:hover,
 distill-header .join:active {
   color: #fff;
 }
-distill-header .theme-toggle {
-  display: flex;
-  width: 42px;
-  height: 42px;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: none;
-  color: var(--plx-ink-2);
-  cursor: pointer;
-  transition: color 0.15s;
-}
-distill-header .theme-toggle:hover {
-  color: var(--plx-gold-deep);
-}
-distill-header .theme-toggle svg {
-  display: block;
-  width: 22px;
-  height: 22px;
-}
-distill-header .theme-toggle .icon-sun {
-  display: none;
-}
-html.dark distill-header .theme-toggle .icon-moon {
-  display: none;
-}
-html.dark distill-header .theme-toggle .icon-sun {
-  display: block;
-}
-html[data-theme] distill-header .theme-toggle {
-  display: none;
-}
 @media (max-width: 600px) {
   distill-header .content {
     padding: 0 16px;
@@ -175,13 +133,11 @@ html[data-theme] distill-header .theme-toggle {
 </style>
 <div class="content">
   <a href="${SITE_URL}" class="logo" aria-label="Parallax">
-    <img class="on-light" src="${logos.wordmarkOnLight}" alt="Parallax" width="120" height="42">
-    <img class="on-dark" src="${logos.wordmarkOnDark}" alt="" aria-hidden="true" width="120" height="42">
+    <img src="${logos.wordmarkOnLight}" alt="Parallax" width="120" height="42">
   </a>
   <nav class="nav" aria-label="Primary">
     <a class="nav-link" href="${nav.about.href}">${nav.about.label}</a>
     <a class="join" href="${nav.join.href}">${nav.join.label}</a>
-    <button class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">${themeIcons.moon}${themeIcons.sun}</button>
   </nav>
 </div>
 `;

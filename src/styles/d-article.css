@@ -215,11 +215,11 @@ d-article ol > li::marker {
   font-variant-numeric: tabular-nums;
 }
 
-/* Quotes keep their text on the column edge; the gold rule sits in the
-   margin, as on the website. */
+/* Quotes: the gold rule sits where list bullets do and the text is
+   indented like list text. */
 d-article blockquote {
   position: relative;
-  padding-left: 1.1em;
+  padding-left: 1.4em;
   font-style: italic;
   color: var(--plx-ink-1);
 }
@@ -227,20 +227,10 @@ d-article blockquote {
 d-article blockquote::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  left: 0.35em;
   border-left: 2px solid var(--plx-gold);
-}
-
-@media(min-width: 768px) {
-  d-article blockquote {
-    padding-left: 0;
-  }
-
-  d-article blockquote::before {
-    left: -1.25em;
-  }
 }
 
 d-article hr {
@@ -281,16 +271,16 @@ d-article pre {
   font-size: 14px;
   line-height: 1.6;
   letter-spacing: 0;
-  color: var(--plx-ink);
-  background: var(--plx-paper);
-  border-left: 2px solid var(--plx-gold);
-  border-radius: 0 4px 4px 0;
-  padding: 1em 1.25em;
+  color: var(--plx-code-text);
+  background: var(--plx-code-bg);
+  border-radius: 6px;
+  padding: 1.1em 1.4em;
   margin: 0 0 1.5em;
 }
 
 d-article pre code {
   font-size: inherit;
+  color: inherit;
   background: none;
   padding: 0;
   border-radius: 0;
