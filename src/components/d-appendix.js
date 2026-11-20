@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: appendix typography and colours.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,27 +20,42 @@ const T = Template('d-appendix', `
 
 d-appendix {
   contain: layout style;
-  font-size: 0.8em;
-  line-height: 1.7em;
-  margin-top: 60px;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 64px;
   margin-bottom: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  color: rgba(0,0,0,0.5);
-  padding-top: 60px;
-  padding-bottom: 48px;
+  border-top: 1px solid var(--plx-rule-soft);
+  color: var(--plx-ink-2);
+  padding-top: 56px;
+  padding-bottom: 72px;
 }
 
 d-appendix h3 {
-  grid-column: page-start / text-start;
-  font-size: 15px;
-  font-weight: 500;
-  margin-top: 1em;
+  grid-column: text;
+  font-family: var(--plx-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin-top: 2rem;
   margin-bottom: 0;
-  color: rgba(0,0,0,0.65);
+  color: var(--plx-ink);
 }
 
 d-appendix h3 + * {
-  margin-top: 1em;
+  margin-top: 0.6rem;
+}
+
+/* On wide screens headings sit in the left margin, level with their text. */
+@media (min-width: 1000px) {
+  d-appendix h3 {
+    grid-column: page-start / text-start;
+    margin-top: 1.75rem;
+  }
+
+  d-appendix h3 + * {
+    margin-top: 1.75rem;
+  }
 }
 
 d-appendix ol {
@@ -57,8 +73,21 @@ d-appendix li {
   margin-bottom: 1em;
 }
 
+d-appendix li::marker {
+  color: var(--plx-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
 d-appendix a {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--plx-ink-1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--plx-rule);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+d-appendix a:hover {
+  color: var(--plx-gold-ink);
+  border-bottom-color: var(--plx-gold);
 }
 
 d-appendix > * {

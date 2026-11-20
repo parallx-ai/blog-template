@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: British dates; DOI shown only when
+// the article has one.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,15 +38,14 @@ export function bylineTemplate(frontMatter) {
     <div>
       <h3>Published</h3>
       ${frontMatter.publishedDate ? `
-        <p>${frontMatter.publishedMonth} ${frontMatter.publishedDay}, ${frontMatter.publishedYear}</p> ` : `
+        <p>${frontMatter.publishedDateLong}</p> ` : `
         <p><em>Not published yet.</em></p>`}
     </div>
+    ${frontMatter.doi ? `
     <div>
       <h3>DOI</h3>
-      ${frontMatter.doi ? `
-        <p><a href="https://doi.org/${frontMatter.doi}">${frontMatter.doi}</a></p>` : `
-        <p><em>No DOI yet.</em></p>`}
-    </div>
+      <p><a href="https://doi.org/${frontMatter.doi}">${frontMatter.doi}</a></p>
+    </div>` : ''}
   </div>
 `;
 }

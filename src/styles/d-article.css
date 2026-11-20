@@ -1,5 +1,7 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: long-form typography adapted from
+ * the prose styles of www.parallx.ai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +19,25 @@
 d-article {
   contain: layout style;
   overflow-x: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--plx-rule-soft);
   padding-top: 2rem;
-  color: rgba(0, 0, 0, 0.8);
+  color: var(--plx-ink-1);
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 d-article > * {
   grid-column: text;
 }
 
-@media(min-width: 768px) {
-  d-article {
-    font-size: 16px;
-  }
-}
-
 @media(min-width: 1024px) {
   d-article {
-    font-size: 1.06rem;
-    line-height: 1.7em;
+    font-size: 17.5px;
   }
 }
 
 
-/* H2 */
-
+/* Section markers (optional numbers in the left margin) */
 
 d-article .marker {
   text-decoration: none;
@@ -49,6 +45,8 @@ d-article .marker {
   counter-reset: section;
   grid-column: kicker;
   line-height: 1.7em;
+  align-self: baseline;
+  color: var(--plx-ink-2);
 }
 
 d-article .marker:hover {
@@ -57,118 +55,201 @@ d-article .marker:hover {
 
 d-article .marker span {
   padding: 0 3px 4px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--plx-rule);
   position: relative;
   top: 4px;
 }
 
 d-article .marker:hover span {
-  color: rgba(0, 0, 0, 0.7);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+  color: var(--plx-gold-ink);
+  border-bottom: 1px solid var(--plx-gold);
+}
+
+d-article .marker + h2,
+d-article .marker + h3 {
+  align-self: baseline;
+}
+
+
+/* Headings: display serif, semibold and tightly tracked, as on the website */
+
+d-article h2,
+d-article h3 {
+  font-family: var(--plx-font-display);
+  font-weight: 600;
+  color: var(--plx-ink);
+  text-wrap: balance;
 }
 
 d-article h2 {
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 1.25em;
-  margin: 2rem 0 1.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-bottom: 1rem;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: 3rem 0 1.25rem;
+}
+
+/* The website's section divider: a short dotted gold rule. */
+d-article h2::after {
+  content: "";
+  display: block;
+  width: 56px;
+  margin-top: 0.85rem;
+  border-top: 1px dotted var(--plx-gold-dotted);
 }
 
 @media(min-width: 1024px) {
   d-article h2 {
-    font-size: 36px;
+    font-size: 32px;
+    margin-top: 3.5rem;
   }
 }
 
-/* H3 */
+/* No extra space when the article opens with a section heading. */
+d-article > h2:first-child,
+d-article > .marker:first-child,
+d-article > .marker:first-child + h2 {
+  margin-top: 1rem;
+}
 
 d-article h3 {
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 1.4em;
-  margin-bottom: 1em;
-  margin-top: 2em;
+  font-size: 21px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 2.2em 0 0.7em;
 }
 
 @media(min-width: 1024px) {
   d-article h3 {
-    font-size: 20px;
+    font-size: 23px;
   }
 }
 
-/* H4 */
-
 d-article h4 {
+  font-family: var(--plx-font-body);
   font-weight: 600;
-  text-transform: uppercase;
-  font-size: 14px;
-  line-height: 1.4em;
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--plx-ink-1);
+  margin: 1.8em 0 0.5em;
 }
 
-d-article a {
-  color: inherit;
-}
+
+/* Text */
 
 d-article p,
 d-article ul,
 d-article ol,
 d-article blockquote {
   margin-top: 0;
-  margin-bottom: 1em;
+  margin-bottom: 1.15em;
   margin-left: 0;
   margin-right: 0;
 }
 
-d-article blockquote {
-  border-left: 2px solid rgba(0, 0, 0, 0.2);
-  padding-left: 2em;
-  font-style: italic;
-  color: rgba(0, 0, 0, 0.6);
+d-article p {
+  text-wrap: pretty;
+}
+
+d-article strong,
+d-article b {
+  font-weight: 600;
+  color: var(--plx-ink);
 }
 
 d-article a {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  color: var(--plx-gold-ink);
   text-decoration: none;
+  border-bottom: 1px solid var(--plx-gold);
+  transition: color 0.15s, border-color 0.15s;
 }
 
 d-article a:hover {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+  color: var(--plx-ink);
+  border-bottom-color: var(--plx-ink);
+}
+
+/* Image and icon links keep their own styling. */
+d-article a:has(img),
+d-article a:has(svg) {
+  border-bottom: 0;
+}
+
+d-article figcaption a {
+  color: inherit;
+  border-bottom-color: var(--plx-rule);
+}
+
+d-article figcaption a:hover {
+  color: var(--plx-gold-ink);
+  border-bottom-color: var(--plx-gold);
 }
 
 d-article .link {
   text-decoration: underline;
+  text-decoration-color: var(--plx-gold);
   cursor: pointer;
 }
 
 d-article ul,
 d-article ol {
-  padding-left: 24px;
+  padding-left: 1.25em;
 }
 
 d-article li {
-  margin-bottom: 1em;
+  margin-bottom: 0.45em;
   margin-left: 0;
-  padding-left: 0;
+  padding-left: 0.15em;
 }
 
 d-article li:last-child {
   margin-bottom: 0;
 }
 
-d-article pre {
-  font-size: 14px;
-  margin-bottom: 20px;
+d-article ul > li::marker {
+  color: var(--plx-gold);
+}
+
+d-article ol > li::marker {
+  color: var(--plx-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quotes keep their text on the column edge; the gold rule sits in the
+   margin, as on the website. */
+d-article blockquote {
+  position: relative;
+  padding-left: 1.1em;
+  font-style: italic;
+  color: var(--plx-ink-1);
+}
+
+d-article blockquote::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-left: 2px solid var(--plx-gold);
+}
+
+@media(min-width: 768px) {
+  d-article blockquote {
+    padding-left: 0;
+  }
+
+  d-article blockquote::before {
+    left: -1.25em;
+  }
 }
 
 d-article hr {
-  grid-column: screen;
+  grid-column: text;
   width: 100%;
   border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: 60px;
-  margin-bottom: 60px;
+  border-top: 1px solid var(--plx-rule);
+  margin-top: 3em;
+  margin-bottom: 3em;
 }
 
 d-article section {
@@ -177,9 +258,42 @@ d-article section {
 }
 
 d-article span.equation-mimic {
-  font-family: georgia;
+  font-family: var(--plx-font-display);
   font-size: 115%;
   font-style: italic;
+}
+
+
+/* Code outside <d-code> */
+
+d-article code {
+  font-family: var(--plx-font-mono);
+  font-size: 0.88em;
+  letter-spacing: 0;
+  color: var(--plx-ink);
+  background: var(--plx-paper);
+  border-radius: 2px;
+  padding: 0.1em 0.35em;
+}
+
+d-article pre {
+  font-family: var(--plx-font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--plx-ink);
+  background: var(--plx-paper);
+  border-left: 2px solid var(--plx-gold);
+  border-radius: 0 4px 4px 0;
+  padding: 1em 1.25em;
+  margin: 0 0 1.5em;
+}
+
+d-article pre code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
 }
 
 d-article > d-code,
@@ -198,20 +312,20 @@ d-article section > d-math[block]  {
   d-article > d-math[block],
   d-article section > d-math[block] {
       overflow-x: scroll;
-      -ms-overflow-style: none;  // IE 10+
-      overflow: -moz-scrollbars-none;  // Firefox
+      -ms-overflow-style: none;
+      scrollbar-width: none;
   }
 
   d-article > d-code::-webkit-scrollbar,
   d-article section > d-code::-webkit-scrollbar,
   d-article > d-math[block]::-webkit-scrollbar,
   d-article section > d-math[block]::-webkit-scrollbar {
-    display: none;  // Safari and Chrome
+    display: none;
   }
 }
 
 d-article .citation {
-  color: #668;
+  color: var(--plx-gold-ink);
   cursor: pointer;
 }
 
@@ -236,15 +350,20 @@ d-figure {
 d-article table {
   border-collapse: collapse;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid var(--plx-rule);
 }
 
 d-article table th {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  color: var(--plx-ink);
+  border-bottom: 1px solid var(--plx-rule);
 }
 
 d-article table td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--plx-rule-soft);
 }
 
 d-article table tr:last-of-type td {
@@ -253,10 +372,24 @@ d-article table tr:last-of-type td {
 
 d-article table th,
 d-article table td {
-  font-size: 15px;
-  padding: 2px 8px;
+  padding: 0.45em 1.25em 0.45em 0;
+  vertical-align: top;
+}
+
+d-article table th:last-child,
+d-article table td:last-child {
+  padding-right: 0;
 }
 
 d-article table tbody :first-child td {
-  padding-top: 2px;
+  padding-top: 0.6em;
+}
+
+d-article table caption {
+  caption-side: bottom;
+  margin-top: 0.75em;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--plx-ink-2);
 }

@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: theme before first paint,
+// self-hosted fonts and the Parallax favicon.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +20,11 @@ import { domContentLoaded } from './helpers/domContentLoaded.js';
 /* Transforms */
 import { makeStyleTag }    from './styles/styles';
 import { Polyfills }       from './helpers/polyfills';
+
+/* Parallax theme, fonts and favicon */
+import { initTheme }       from './helpers/theme';
+import { addFonts }        from './helpers/fonts';
+import { logos }           from './distill-components/parallax-brand';
 
 /* Components */
 import { Abstract }        from './components/d-abstract';
@@ -44,6 +51,26 @@ import { Slider }          from './ui/d-slider';
 import { DistillHeader }   from './distill-components/distill-header';
 import { DistillAppendix } from './distill-components/distill-appendix';
 import { DistillFooter }   from './distill-components/distill-footer';
+
+/* Apply the reader's theme and start loading Inter straight away, while the
+   template script runs in <head>, so the page never flashes the wrong theme. */
+initTheme();
+addFonts(document);
+
+function addFavicon() {
+  if (document.querySelector('link[rel~="icon"]')) return;
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/webp';
+  link.href = logos.markOnLight;
+  document.head.appendChild(link);
+}
+
+if (domContentLoaded()) {
+  addFavicon();
+} else {
+  document.addEventListener('DOMContentLoaded', addFavicon);
+}
 
 let templateIsLoading = false;
 let runlevel = 0;

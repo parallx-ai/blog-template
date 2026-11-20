@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax design tokens.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import tokens from './parallax-tokens.css';
 import base from './styles-base.css';
 import layout from './styles-layout.css';
 import print from './styles-print.css';
@@ -20,7 +22,7 @@ import article from './d-article.css';
 import title from './d-title.css';
 import math from './d-math.css';
 
-export const styles = base + layout + title + byline + article + math + print;
+export const styles = tokens + base + layout + title + byline + article + math + print;
 
 export function makeStyleTag(dom) {
 

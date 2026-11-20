@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax citation text and styles,
+// and an optional, front-matter driven "Reuse" note.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,15 +23,15 @@ const styles = `
   }
 
   distill-appendix .citation {
-    font-size: 11px;
-    line-height: 15px;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    padding-left: 18px;
-    border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(0, 0, 0, 0.02);
-    padding: 10px 18px;
-    border-radius: 3px;
-    color: rgba(150, 150, 150, 1);
+    font-family: var(--plx-font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    letter-spacing: 0;
+    color: var(--plx-ink-1);
+    background: var(--plx-paper);
+    border: 1px solid var(--plx-rule-soft);
+    border-radius: 4px;
+    padding: 10px 16px;
     overflow: hidden;
     margin-top: -12px;
     white-space: pre-wrap;
@@ -57,19 +59,22 @@ export function appendixTemplate(frontMatter) {
     `;
   }
 
-  const journal = frontMatter.journal;
-  if (typeof journal !== 'undefined' && journal.title === 'Distill') {
+  const license = frontMatter.license;
+  if (license && license.name) {
+    const licenseName = license.url ? `<a href="${license.url}">${license.name}</a>` : license.name;
+    const source = frontMatter.githubUrl ? ` with the <a class="github" href="${frontMatter.githubUrl}">source available on GitHub</a>` : '';
     html += `
     <h3 id="reuse">Reuse</h3>
-    <p>Diagrams and text are licensed under Creative Commons Attribution <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> with the <a class="github" href="${frontMatter.githubUrl}">source available on GitHub</a>, unless noted otherwise. The figures that have been reused from other sources don’t fall under this license and can be recognized by a note in their caption: “Figure from …”.</p>
+    <p>Diagrams and text are licensed under ${licenseName}${source}, unless noted otherwise. Figures reused from other sources are not covered by this licence and are marked in their captions.</p>
     `;
   }
 
   if (typeof frontMatter.publishedDate !== 'undefined') {
+    const journal = (frontMatter.journal && frontMatter.journal.title) || 'Parallax';
     html += `
     <h3 id="citation">Citation</h3>
     <p>For attribution in academic contexts, please cite this work as</p>
-    <pre class="citation short">${frontMatter.concatenatedAuthors}, "${frontMatter.title}", Distill, ${frontMatter.publishedYear}.</pre>
+    <pre class="citation short">${frontMatter.concatenatedAuthors}, "${frontMatter.title}", ${journal}, ${frontMatter.publishedYear}.</pre>
     <p>BibTeX citation</p>
     <pre class="citation long">${serializeFrontmatterToBibtex(frontMatter)}</pre>
     `;

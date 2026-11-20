@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: BibTeX "and others" becomes "et al.",
+// page ranges get an en dash.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,6 +61,12 @@ function author_string(ent, template, sep, finalSep) {
     return "";
   }
   var names = ent.author.split(" and ");
+  // BibTeX truncates long author lists with "and others".
+  var etAl = false;
+  if (names.length > 1 && names[names.length - 1].trim().toLowerCase() === "others") {
+    names = names.slice(0, -1);
+    etAl = true;
+  }
   let name_strings = names.map(name => {
     name = name.trim();
     if (name.indexOf(",") != -1) {
@@ -90,6 +98,9 @@ function author_string(ent, template, sep, finalSep) {
       .replace("${I}", initials)
       .trim(); // in case one of first or last was empty
   });
+  if (etAl) {
+    return name_strings.join(sep) + sep + "et al.";
+  }
   if (names.length > 1) {
     var str = name_strings.slice(0, names.length - 1).join(sep);
     str += (finalSep || sep) + name_strings[names.length - 1];
@@ -107,7 +118,7 @@ function venue_string(ent) {
     cite += ", Vol " + ent.volume + issue;
   }
   if ("pages" in ent) {
-    cite += ", pp. " + ent.pages;
+    cite += ", pp. " + ent.pages.replace(/-{2,}/g, "\u2013");
   }
   if (cite != "") cite += ". ";
   if ("publisher" in ent) {
@@ -192,7 +203,8 @@ export function hover_cite(ent) {
     cite += link_string(ent);
     cite += "<br>";
 
-    var a_str = author_string(ent, "${I} ${L}", ", ") + ".";
+    var a_str = author_string(ent, "${I} ${L}", ", ");
+    if (a_str.slice(-1) !== ".") a_str += ".";
     var v_str =
       venue_string(ent).trim() + " " + ent.year + ". " + doi_string(ent, true);
 

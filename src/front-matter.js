@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax journal default, British
+// long dates, and url/journal/githubPath/license from article front matter.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +16,7 @@
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const zeroPad = n => n < 10 ? '0' + n : n;
 
 const RFC = function(date) {
@@ -99,6 +102,23 @@ export function mergeFromYMLFrontmatter(target, source) {
   if (source.doi) {
     target.doi = source.doi;
   }
+  // Optional Parallax additions to the JSON front matter:
+  //   "url": canonical address, used in the citation block and BibTeX
+  //   "journal": {"title": "..."} to cite under a name other than "Parallax"
+  //   "githubPath": "org/repo" to show "Updates and Corrections"
+  //   "license": {"name": "CC-BY 4.0", "url": "..."} to show a "Reuse" note
+  if (source.url) {
+    target.url = source.url;
+  }
+  if (source.journal) {
+    target.journal = Object.assign({}, target.journal, source.journal);
+  }
+  if (source.githubPath) {
+    target.githubPath = source.githubPath;
+  }
+  if (source.license) {
+    target.license = typeof source.license === 'string' ? { name: source.license } : source.license;
+  }
 }
 
 export class FrontMatter {
@@ -138,7 +158,9 @@ export class FrontMatter {
     //
     // Assigned from journal
     //
-    this.journal = {};
+    // Parallax articles are cited as "Parallax" unless the front matter
+    // names another journal.
+    this.journal = { title: 'Parallax' };
     //  journal: {
     //    'title': 'Distill',
     //    'full_title': 'Distill',
@@ -210,7 +232,8 @@ export class FrontMatter {
     this._previewURL = value;
   }
   get previewURL() {
-    return this._previewURL ? this._previewURL : this.url + '/thumbnail.jpg';
+    if (this._previewURL) return this._previewURL;
+    return this.url ? this.url + '/thumbnail.jpg' : undefined;
   }
 
   // 'Thu, 08 Sep 2016 00:00:00 -0700',
@@ -231,6 +254,16 @@ export class FrontMatter {
   // 'Sept',
   get publishedMonth() {
     return months[this.publishedDate.getMonth()];
+  }
+
+  // 'September',
+  get publishedMonthLong() {
+    return monthsLong[this.publishedDate.getMonth()];
+  }
+
+  // '8 September 2016', the British form used on parallx.ai
+  get publishedDateLong() {
+    return `${this.publishedDay} ${this.publishedMonthLong} ${this.publishedYear}`;
   }
 
   // 8,
@@ -331,6 +364,8 @@ export class FrontMatter {
       target.publishedDateRFC = this.publishedDateRFC;
       target.publishedYear = this.publishedYear;
       target.publishedMonth = this.publishedMonth;
+      target.publishedMonthLong = this.publishedMonthLong;
+      target.publishedDateLong = this.publishedDateLong;
       target.publishedDay = this.publishedDay;
       target.publishedMonthPadded = this.publishedMonthPadded;
       target.publishedDayPadded = this.publishedDayPadded;

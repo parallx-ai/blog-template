@@ -1,5 +1,7 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: print the light theme without site
+ * chrome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +25,11 @@
     }
   }
 
-  html {
-    /* no general margins -- CSS Grid takes care of those */
+  /* The dark tokens only apply on screen, so print always uses the light
+     palette; a white page saves toner. */
+  html,
+  body {
+    background: #fff;
   }
 
   p, code {
@@ -35,12 +40,10 @@
     page-break-after: avoid;
   }
 
-  d-header {
-    visibility: hidden;
-  }
-
-  d-footer {
-    display: none!important;
+  distill-header,
+  distill-footer,
+  d-hover-box {
+    display: none !important;
   }
 
 }

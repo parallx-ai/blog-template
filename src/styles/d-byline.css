@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: byline typography and colours.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +18,12 @@
 d-byline {
   contain: style;
   overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  font-size: 0.8rem;
-  line-height: 1.8em;
+  border-top: 1px solid var(--plx-rule-soft);
+  font-size: 0.875rem;
+  line-height: 1.6;
   padding: 1.5rem 0;
   min-height: 1.8em;
+  color: var(--plx-ink-1);
 }
 
 
@@ -49,11 +51,14 @@ d-byline .authors-affiliations {
 }
 
 d-byline h3 {
-  font-size: 0.6rem;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.5);
-  margin: 0;
+  font-family: var(--plx-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--plx-ink-2);
+  margin: 0 0 0.3rem;
 }
 
 d-byline p {
@@ -62,20 +67,25 @@ d-byline p {
 
 d-byline a,
 d-article d-byline a {
-  color: rgba(0, 0, 0, 0.8);
+  color: inherit;
   text-decoration: none;
   border-bottom: none;
 }
 
+d-byline a:hover,
 d-article d-byline a:hover {
+  color: var(--plx-gold-ink);
   text-decoration: underline;
+  text-decoration-color: var(--plx-gold);
+  text-underline-offset: 3px;
   border-bottom: none;
 }
 
 d-byline p.author {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--plx-ink);
 }
 
-d-byline .affiliations {
-
+d-byline .affiliation {
+  color: var(--plx-ink-2);
 }

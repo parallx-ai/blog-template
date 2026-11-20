@@ -1,25 +1,100 @@
-# Distill Template
+# Parallax publication template
 
-This is the repository for the Distill web framework. 
+The template for research articles published by [Parallax](https://www.parallx.ai). It is a fork of the [Distill template](https://github.com/distillpub/template), so articles are written the same way, with one script, JSON front matter and the `<d-*>` elements, but they look like www.parallx.ai: the site's header and footer, Inter for text, the site's display serif for headings, the cream, ink and gold palette, and its light and dark themes.
 
-## Contributing
+Open `examples/index.html` (see [Local development](#local-development)) for a tour of every element. `examples/kitchen-sink.html` is the upstream Distill demo, kept as a regression page.
 
+## Writing an article
 
-To give feedback, report a bug, or request a feature, please open an issue.
+```html
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <script src="https://<where dist/ is served>/template.v2.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <distill-header></distill-header>
+  <d-front-matter>
+    <script type="text/json">{
+      "title": "Article title",
+      "description": "One-sentence summary.",
+      "published": "November 20, 2026",
+      "authors": [{"author": "Name Surname", "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]}]
+    }</script>
+  </d-front-matter>
+  <d-title>
+    <p class="eyebrow">Research</p>
+    <h1>Article title</h1>
+    <p>Standfirst.</p>
+  </d-title>
+  <d-byline></d-byline>
+  <d-article>…</d-article>
+  <d-appendix>
+    <d-bibliography src="bibliography.bib"></d-bibliography>
+  </d-appendix>
+  <distill-footer></distill-footer>
+</body>
+</html>
+```
 
-To contribute a change, [check out the contributing guide](CONTRIBUTING.md).
+Everything else (`d-cite`, `d-footnote`, `d-math`, `d-code`, `d-figure`, the `l-body`/`l-page`/`l-gutter` layout classes, asides) works as described in the [Distill guide](https://distill.pub/guide/).
 
-### Local Development
+Parallax additions:
 
-First, run `npm install` to install all node modules required. Then, run `npm run dev` to start a watching build rollup server. To view the sample pages in the repo, you can run `npm run serve` as a separate process which starts a static server. `npm run build` will run a one-time build.
+- **Eyebrow.** `<p class="eyebrow">` in `d-title` sets the gold label above the title, as on the website.
+- **Front matter.** Besides title, description, published date and authors, the JSON accepts `url` (canonical address, used in the citation and link previews), `journal` (`{"title": "…"}`, to cite under a name other than "Parallax"), `githubPath` (`"org/repo"`, adds "Updates and Corrections") and `license` (`{"name": "CC-BY 4.0", "url": "…"}`, adds a "Reuse" note). The appendix ends with a citation block and BibTeX once the article has a published date.
+- **Byline.** Dates are written the British way (20 November 2026), and the DOI column only appears when the front matter has a `doi`.
 
+## Light and dark
 
-## Disclaimer & License
+The theme follows www.parallx.ai: the `dark` class on `<html>`, set before first paint from the reader's choice on the site (localStorage `theme`) or their system preference, and toggled from the header. On the same origin the choice is shared with the website.
 
-_This project is research code. It is not an official product of Google or any other institution supporting Distill._
+- `<html data-theme="light">` (or `"dark"`) pins an article to one theme and hides the toggle, e.g. when its figures only work on white.
+- Images in the article sit on a cream plate in dark mode, so transparent charts stay legible. Add `class="no-plate"` to images drawn for dark backgrounds.
+- `class="only-light"` / `class="only-dark"` show an element in one theme only, e.g. a light and a dark render of the same chart (see `examples/probe_figure.py`, which uses [plxviz](https://github.com/parallx-ai/plxviz)).
+- Interactive figures can read `document.documentElement.classList.contains('dark')` and listen for the `parallax:themechange` event on `document`.
+- Printing always uses the light theme.
 
-Copyright 2018, The Distill Template Authors.
+## Design tokens
 
-Licensed under the Apache License, Version 2.0
+All colours and fonts are CSS custom properties (`src/styles/parallax-tokens.css`), mirrored from the website's `global.css` and namespaced with `--plx-`. Articles can use them in their own CSS and SVG, and they switch with the theme.
 
-See the [full license](LICENSE).
+| Token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--plx-cream` | `#f4f1ea` | `#111411` | page |
+| `--plx-paper` | `#eef1ed` | `#171c19` | code, panels |
+| `--plx-ink` | `#111411` | `#eff1e9` | headings, emphasis |
+| `--plx-ink-1` | `#303631` | `#cbd0c9` | body text |
+| `--plx-ink-2` | `#606a63` | `#a9b0aa` | captions, secondary text |
+| `--plx-rule` / `--plx-rule-soft` | `#cfd6d0` / `#e1e6e1` | `#343c36` / `#272e29` | hairlines |
+| `--plx-gold` | `#c89a2a` | `#d7aa3d` | rules, underlines, markers |
+| `--plx-gold-deep` | `#a37f1f` | `#e8c97a` | hover, accents |
+| `--plx-gold-ink` | `#896600` | `#e8c97a` | small gold text: links, citation marks |
+| `--plx-font-display` | Iowan Old Style, Palatino, … | | headings |
+| `--plx-font-body` | Inter, system UI | | text |
+| `--plx-font-mono` | ui-monospace, SF Mono, … | | code |
+
+`--plx-gold-ink` is the one deliberate departure from the website: the site's `#a37f1f` reaches 3.3:1 on cream, below WCAG AA for running text, so link text uses a darker gold (4.7:1) while underlines and accents keep the site's gold.
+
+Names, links, the legal line and the logos live in `src/distill-components/parallax-brand.js`; keep it in sync with `SiteNav.astro` and `SiteFooter.astro` on the website.
+
+## Local development
+
+```bash
+npm ci
+npm run dev    # watches src/ and serves dist/ + examples/ on http://localhost:8088
+npm run build  # one-off build into dist/
+npm test
+```
+
+## Deploying
+
+Serve the contents of `dist/` together: `template.v2.js` plus the `fonts/` folder next to it. The template loads Inter from that folder, relative to its own URL, so no third-party font service is contacted (fonts are sent with CORS headers by GitHub Pages and most static hosts). The logos are bundled into the script.
+
+KaTeX and the polyfills for very old browsers are still loaded from distill.pub, as in the upstream template.
+
+## Licences
+
+The code is the Distill template's, under the [Apache License 2.0](LICENSE); files changed for Parallax say so in their headers. Inter is under the SIL Open Font License (`src/assets/fonts/inter/OFL.txt`). The Parallax name, wordmark and mark in `src/assets/parallax/` belong to Parallax and are not covered by the Apache License.

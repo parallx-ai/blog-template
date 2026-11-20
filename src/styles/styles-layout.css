@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: aside typography.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,7 +163,7 @@ d-figure {
 .l-screen-inset {
   grid-column: screen;
   padding-left: 16px;
-  padding-left: 16px;
+  padding-right: 16px;
 }
 
 
@@ -170,9 +171,18 @@ d-figure {
 
 d-article aside {
   grid-column: gutter;
-  font-size: 12px;
-  line-height: 1.6em;
-  color: rgba(0, 0, 0, 0.6)
+  font-family: var(--plx-font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--plx-ink-2);
+}
+
+/* Below 768px the gutter is the text column: keep asides apart. */
+@media(max-width: 767px) {
+  d-article aside {
+    margin-bottom: 1.15em;
+  }
 }
 
 @media(min-width: 768px) {

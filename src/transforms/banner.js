@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax draft banner.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,15 +16,18 @@
 const html = `
 <style>
   dt-banner {
-    background: #FFF59D;
+    background: #e8c97a;
     display: block;
     text-align: center;
-    color: black;
-    height: 70px;
-    line-height: 70px;
+    color: #111411;
+    font-family: var(--plx-font-body);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 16px;
+    line-height: 1.5;
   }
 </style>
-<div>This article is a draft, awaiting review for publication in Distill</div>
+<div>This article is a draft and has not been published by Parallax yet.</div>
 `;
 
 export default function(dom, data) {

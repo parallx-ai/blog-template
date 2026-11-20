@@ -1,5 +1,5 @@
 <!--
-  Copyright 2018 The Distill Template Authors
+  Copyright 2026 Parallax
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,40 +14,95 @@
   limitations under the License.
 -->
 <!doctype html>
+<html lang="en-GB">
 
 <head>
+  <meta charset="utf-8">
   <script src="template.v2.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="utf8">
+  <title>Writing for Parallax</title>
+  <style>
+    /* An inline SVG figure drawn with the template's colour tokens, so it
+       follows the reader's light or dark theme. */
+    .parallax-diagram {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .parallax-diagram .background {
+      stroke: var(--plx-rule);
+      stroke-width: 1;
+    }
+
+    .parallax-diagram .tick {
+      stroke: var(--plx-rule);
+      stroke-width: 1;
+    }
+
+    .parallax-diagram .ray {
+      stroke: var(--plx-gold);
+      stroke-width: 1.4;
+      stroke-dasharray: 5 5;
+      fill: none;
+    }
+
+    .parallax-diagram .sight {
+      stroke: var(--plx-ink-2);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .parallax-diagram .object {
+      fill: var(--plx-ink);
+    }
+
+    .parallax-diagram .viewpoint {
+      fill: var(--plx-cream);
+      stroke: var(--plx-ink-1);
+      stroke-width: 1.4;
+    }
+
+    .parallax-diagram .projection {
+      fill: var(--plx-gold);
+    }
+
+    .parallax-diagram .angle {
+      stroke: var(--plx-gold-deep);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .parallax-diagram text {
+      fill: var(--plx-ink-1);
+      font-family: var(--plx-font-display);
+      font-size: 17px;
+      font-style: italic;
+      text-anchor: middle;
+    }
+  </style>
 </head>
 
 <body>
   <distill-header></distill-header>
   <d-front-matter>
-    <script id='distill-front-matter' type="text/json">{
-    "title": "Why Momentum Really Works",
-    "description": "Although \" extremely useful for visualizing high-dimensional data, t-SNE plots can sometimes be mysterious or misleading.",
-    "published": "Jan 10, 2017",
+    <script type="text/json">{
+    "title": "Writing for Parallax",
+    "description": "A tour of the Parallax publication template: the page, figures, notes and citations, and the light and dark themes.",
+    "published": "November 20, 2026",
     "authors": [
       {
-        "author":"Chris Olah",
-        "authorURL":"https://colah.github.io/",
-        "affiliations": [{"name": "Google Brain"}]
+        "author": "Alex Example",
+        "authorURL": "https://www.parallx.ai/",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]
       },
       {
-        "author":"Ludwig Schubert",
-        "authorURL":"https://shancarter.com/",
-        "affiliations": [{"name": "Google Brain", "url": "https://g.co/brain"}]
-      },
-      {
-        "author":"Shan Carter",
-        "authorURL":"https://shancarter.com/",
-        "affiliations": [
-          {"name": "Google Brain", "url": "https://g.co/brain"},
-          {"name": "NYT", "url": "https://nytimes.com"}
-        ]
+        "author": "Sam Placeholder",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]
       }
     ],
+    "githubPath": "parallx-ai/blog-template",
     "katex": {
       "delimiters": [
         {"left": "$$", "right": "$$", "display": false}
@@ -55,129 +110,142 @@
     }
   }</script>
   </d-front-matter>
-  <d-title>
-    <figure style="grid-column: page; margin: 1rem 0;"><img src="momentum.png"
-        style="width:100%; border: 1px solid rgba(0, 0, 0, 0.2);" /></figure>
-    <p>We often think of Momentum<d-cite key="mercier2011humans"></d-cite> as a means of dampening oscillations and
-      speeding up the iterations, leading to faster convergence. But it has other interesting behavior. It allows a
-      larger range of step-sizes to be used, and creates its own oscillations. What is going on?</p>
-  </d-title>
-  <d-byline></d-byline>
-  <d-article>
-    <a class="marker" href="#section-1" id="section-1"><span>1</span></a>
-    <h2>A Brief Survey of Techniques</h2>
-    <p>Before diving in: if you haven’t encountered t-SNE before, here’s what you need to know about the math behind it.
-      The goal is to take a set of points in a high-dimensional space and find a faithful representation of those points
-      in a lower-dimensional space, typically the 2D plane. The algorithm is non-linear and adapts to the underlying
-      data, performing different transformations on different regions. Those differences can be a major source of
-      confusion.</p>
-    <p>This is the first paragraph of the article. Test a long&thinsp;&mdash;&thinsp;dash -- here it is.</p>
-    <p>Test for owner's possessive. Test for "quoting a passage." And another sentence. Or two. Some flopping fins; for
-      diving.</p>
-    <aside>Some text in an aside, margin notes, etc...</aside>
-    <p>Here's a test of an inline equation <d-math>c = a^2 + b^2</d-math>. Also with configurable katex standards just
-      using inline '$' signs: $$x^2$$ And then there's a block equation:</p>
-    <d-math block>
-      c = \pm \sqrt{ \sum_{i=0}^{n}{a^{222} + b^2}}
-    </d-math>
-    <p>Math can also be quite involved:</p>
-    <d-math block>
-      \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}}
-      {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\cdots} } } }
-    </d-math>
-    <a class="marker" href="#section-1.1" id="section-1.1"><span>1.1</span></a>
-    <h3>Citations</h3>
-    <p>
-      <d-slider style="width: 200px;"></d-slider>
-    </p>
-    <p>We can<d-cite bibtex-key="mercier2011humans"></d-cite> also cite <d-cite
-        key="gregor2015draw,mercier2011humans,openai2018charter"></d-cite> external publications. <d-cite
-        key="dong2014image,dumoulin2016guide,mordvintsev2015inceptionism"></d-cite>. We should also be testing footnotes
-      <d-footnote>This will become a hoverable footnote. This will become a hoverable footnote. This will become a
-        hoverable footnote. This will become a hoverable footnote. This will become a hoverable footnote. This will
-        become a hoverable footnote. This will become a hoverable footnote. This will become a hoverable footnote.
-      </d-footnote>. There are multiple footnotes, and they appear in the appendix<d-footnote>Given I have coded them
-        right. Also, here's math in a footnote: <d-math>c = \sum_0^i{x}</d-math>. Also, a citation. Box-ception<d-cite
-          key='gregor2015draw'></d-cite>!</d-footnote> as well.</p>
-    <a class="marker" href="#section-2" id="section-2"><span>2</span></a>
-    <h2>Displaying code snippets</h2>
-    <p>Some inline javascript:<d-code language="javascript">var x = 25;</d-code>. And here's a javascript code block.
-    </p>
-    <d-code block language="javascript">
-      var x = 25;
-      function(x){
-      return x * x;
-      }
-    </d-code>
-    <p>We also support python.</p>
-    <d-code block language="python">
-      # Python 3: Fibonacci series up to n
-      def fib(n):
-      a, b = 0, 1
-      while a < n: print(a, end=' ' ) a, b=b, a+b </d-code>
-        <p>And a table</p>
-        <table>
-          <thead>
-            <tr>
-              <th>First</th>
-              <th>Second</th>
-              <th>Third</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>23</td>
-              <td>654</td>
-              <td>23</td>
-            </tr>
-            <tr>
-              <td>14</td>
-              <td>54</td>
-              <td>34</td>
-            </tr>
-            <tr>
-              <td>234</td>
-              <td>54</td>
-              <td>23</td>
-            </tr>
-          </tbody>
-        </table>
-        <d-figure id="last-figure"></d-figure>
-        <script>
-          const figure = document.querySelector("d-figure#last-figure");
-          const initTag = document.createElement("span");
-          initTag.textContent = "initialized!"
-          figure.appendChild(initTag);
-          figure.addEventListener("ready", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "ready"
-            console.log('ready')
-          });
-          figure.addEventListener("onscreen", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "onscreen"
-            console.log('onscreen')
-          });
-          figure.addEventListener("offscreen", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "offscreen!"
-            console.log('offscreen')
-          });
-        </script>
-        <p>That's it for the example article!</p>
 
+  <d-title>
+    <p class="eyebrow">Template guide</p>
+    <h1>Writing for Parallax</h1>
+    <p>A tour of the publication template: how an article is laid out, how figures, notes and citations work, and how the page follows each reader's light or dark theme.</p>
+  </d-title>
+
+  <d-byline></d-byline>
+
+  <d-article>
+    <p>This page is written with the template it describes. Articles keep the authoring model of <a href="https://github.com/distillpub/template">Distill</a>: a single <code>template.v2.js</code> script, a JSON front matter block, and a handful of custom elements such as <code>&lt;d-cite&gt;</code> and <code>&lt;d-footnote&gt;</code>. What changes is the look, which now follows <a href="https://www.parallx.ai/">parallx.ai</a>.</p>
+
+    <h2>The page</h2>
+    <p>The header and footer are the website's own, with the wordmark, the links to <em>About</em> and <em>Join us</em>, and the theme switch. The title block takes an optional gold eyebrow, a headline in the site's display serif and a short standfirst; the byline is built from the front matter.</p>
+    <aside>Margin notes go in an <code>&lt;aside&gt;</code>. On narrow screens they fall back into the text column.</aside>
+    <p>Running text is set in <strong>Inter</strong> at 17.5&nbsp;pixels with generous leading, headings in the bookish system serif the website uses, and links in a deep gold with a fine underline. Every colour comes from a token such as <code>--plx-ink</code> or <code>--plx-gold</code>, so the whole page changes theme at once.</p>
+
+    <h3>Lists and quotations</h3>
+    <ul>
+      <li>Bulleted lists carry gold markers.</li>
+      <li>Numbered lists use muted numerals with tabular figures.</li>
+      <li>Asides, footnotes and citations work as they always have.</li>
+    </ul>
+    <blockquote>Quotations keep their text on the column edge and hang a gold rule in the margin, as on the website.</blockquote>
+
+    <h2>Figures</h2>
+    <p>Charts made with <a href="https://github.com/parallx-ai/plxviz">plxviz</a> share the palette of the page: gold for the condition a figure is about, grey for the control. Rendering a chart twice, once per theme, and marking the two images <code>only-light</code> and <code>only-dark</code> shows each reader the matching version.</p>
+    <figure class="l-page">
+      <img class="only-light" src="probe-light.png" alt="Line chart of probe accuracy by layer: a linear probe rises from 52% at layer 0 to 88% at layer 16, then falls to 66% at layer 32, while a probe trained on shuffled labels stays near 50%. Example data.">
+      <img class="only-dark no-plate" src="probe-dark.png" alt="Line chart of probe accuracy by layer: a linear probe rises from 52% at layer 0 to 88% at layer 16, then falls to 66% at layer 32, while a probe trained on shuffled labels stays near 50%. Example data.">
+      <figcaption><strong>Figure 1.</strong> A chart in the Parallax style, made with plxviz from example data (see <code>examples/probe_figure.py</code>). Probing classifiers<d-cite key="alain2016understanding,belinkov2022probing"></d-cite> are a common first look inside a model.</figcaption>
+    </figure>
+
+    <p>Diagrams drawn as inline SVG can use the colour tokens directly, so they need only one version: the strokes and fills of the figure below are all set with tokens such as <code>--plx-gold</code>.</p>
+    <figure>
+      <svg class="parallax-diagram" viewBox="0 0 600 236" role="img" aria-labelledby="parallax-diagram-title">
+        <title id="parallax-diagram-title">Two viewpoints see one object against two different points of a distant background.</title>
+        <line class="background" x1="40" y1="44" x2="560" y2="44" />
+        <line class="tick" x1="40" y1="38" x2="40" y2="50" />
+        <line class="tick" x1="560" y1="38" x2="560" y2="50" />
+        <path class="ray" d="M300 118 387.5 44 M300 118 212.5 44" />
+        <path class="sight" d="M200 196 300 118 400 196" />
+        <path class="angle" d="M276 136.7 Q300 152 324 136.7" />
+        <circle class="object" cx="300" cy="118" r="13" />
+        <circle class="projection" cx="387.5" cy="44" r="4.5" />
+        <circle class="projection" cx="212.5" cy="44" r="4.5" />
+        <circle class="viewpoint" cx="200" cy="196" r="6" />
+        <circle class="viewpoint" cx="400" cy="196" r="6" />
+        <text x="200" y="226">A</text>
+        <text x="400" y="226">B</text>
+        <text x="387.5" y="28">A′</text>
+        <text x="212.5" y="28">B′</text>
+        <text x="327" y="128">O</text>
+      </svg>
+      <figcaption><strong>Figure 2.</strong> Parallax: seen from A and from B, the object O falls on different points of the background, A′ and B′. The diagram is inline SVG styled with the template's tokens; switch the theme to see it follow.</figcaption>
+    </figure>
+
+    <p>Raster images in the article sit on a cream plate in dark mode, so transparent charts with dark ink stay legible. Add <code>no-plate</code> to an image that is already drawn for a dark page.</p>
+
+    <h2>Notes, citations and maths</h2>
+    <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected in the appendix. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>
+    <p>Inline maths uses KaTeX, either with the <code>&lt;d-math&gt;</code> element, as in <d-math>h_\ell = f_\ell(h_{\ell-1})</d-math>, or with the delimiters configured in the front matter, as in $$\hat{y} = \mathrm{softmax}(W h_\ell)$$. Display maths is set on its own line:</p>
+    <d-math block>
+      \mathcal{L}(W) = -\frac{1}{N} \sum_{i=1}^{N} \log p_W\!\left(y_i \mid h_\ell^{(i)}\right)
+    </d-math>
+
+    <h2>Code and tables</h2>
+    <p>Code blocks use the same palette as the charts, with a light and a dark variant of every colour.</p>
+    <d-code block language="python">
+      import torch
+
+      def probe_accuracy(probe, activations, labels):
+          """Share of examples the probe labels correctly."""
+          with torch.no_grad():
+              predictions = probe(activations).argmax(dim=-1)
+          return (predictions == labels).float().mean().item()
+    </d-code>
+    <p>Tables use tabular figures and hairline rules.</p>
+    <table>
+      <caption>Example data, as in Figure 1.</caption>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Probe accuracy</th>
+          <th>Shuffled labels</th>
+          <th>Selectivity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>8</td>
+          <td>69.0%</td>
+          <td>50.0%</td>
+          <td>19.0</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>88.0%</td>
+          <td>51.0%</td>
+          <td>37.0</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>79.0%</td>
+          <td>52.0%</td>
+          <td>27.0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Light and dark</h2>
+    <p>The page opens in the theme the reader chose on parallx.ai, or in their system's theme if they never chose one, and the switch in the header changes it for every Parallax page on the same site. A page whose figures only work on a light background can pin its theme:</p>
+    <d-code block language="markup">
+      &lt;html lang="en-GB" data-theme="light"&gt;
+    </d-code>
+    <p>Interactive figures can read the current theme from the <code>dark</code> class on <code>&lt;html&gt;</code> and redraw when the template dispatches <code>parallax:themechange</code> on the document.</p>
+
+    <h2>Publishing</h2>
+    <p>Serve the contents of <code>dist/</code> together: <code>template.v2.js</code> loads Inter from the <code>fonts/</code> folder next to it, so no third-party font service is contacted. Beyond the usual title, description, date and authors, the front matter accepts a few optional keys:</p>
+    <ol>
+      <li><code>url</code>, the article's canonical address, used in the citation;</li>
+      <li><code>journal</code>, to cite the article under a name other than Parallax;</li>
+      <li><code>githubPath</code>, to invite corrections on GitHub, as this page does;</li>
+      <li><code>license</code>, to add a reuse notice to the appendix.</li>
+    </ol>
   </d-article>
 
   <d-appendix>
+    <h3>Acknowledgements</h3>
+    <p>This template adapts the <a href="https://github.com/distillpub/template">Distill template</a> by Shan Carter, Ludwig Schubert and contributors, under the Apache License 2.0. Inter is by Rasmus Andersson and the Inter Project Authors, under the SIL Open Font License.</p>
 
-    <h3>Contributions</h3>
-    <p>Some text describing who did what.</p>
-    <h3>Reviewers</h3>
-    <p>Some text with links describing who reviewed the article.</p>
-
-    <d-bibliography src="bibliography.bib"></d-bibliography>
+    <d-bibliography src="parallax-references.bib"></d-bibliography>
   </d-appendix>
 
   <distill-footer></distill-footer>
 
 </body>
+
+</html>

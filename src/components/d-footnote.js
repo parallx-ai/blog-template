@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed footnote marks.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,12 +35,15 @@ sup {
 }
 
 span {
-  color: hsla(206, 90%, 20%, 0.7);
+  color: var(--plx-gold-ink);
+  font-family: var(--plx-font-body);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   cursor: default;
 }
 
 .footnote-container {
-  padding: 10px;
+  padding: 12px 16px;
 }
 
 </style>

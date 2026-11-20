@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed citation marks and hover box.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,15 +26,18 @@ const T = Template(
 }
 
 .citation {
-  color: hsla(206, 90%, 20%, 0.7);
+  color: var(--plx-gold-ink);
 }
 
 .citation-number {
   cursor: default;
   white-space: nowrap;
-  font-family: -apple-system, BlinkMacSystemFont, "Roboto", Helvetica, sans-serif;
-  font-size: 75%;
-  color: hsla(206, 90%, 20%, 0.7);
+  font-family: var(--plx-font-body);
+  font-size: 72%;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: var(--plx-gold-ink);
   display: inline-block;
   line-height: 1.1em;
   text-align: center;
@@ -56,12 +60,29 @@ ul {
 }
 
 ul li {
-  padding: 15px 10px 15px 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.1)
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--plx-rule-soft);
 }
 
 ul li:last-of-type {
   border-bottom: none;
+}
+
+ul .title {
+  font-weight: 600;
+  color: var(--plx-ink);
+}
+
+ul a {
+  color: var(--plx-gold-ink);
+  text-decoration: none;
+}
+
+ul a:hover {
+  color: var(--plx-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--plx-gold);
+  text-underline-offset: 3px;
 }
 
 </style>

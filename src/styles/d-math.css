@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: themed maths colour.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +23,7 @@ span.katex-display {
 
 span.katex {
   -webkit-font-smoothing: antialiased;
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 1.18em;
+  color: var(--plx-ink-1);
+  font-size: 1.15em;
+  letter-spacing: 0;
 }

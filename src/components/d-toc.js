@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed links.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,9 +47,20 @@ export function renderTOC(element, headings) {
     padding-left: 24px;
   }
 
-  d-toc a {
+  d-toc a,
+  d-article d-toc a {
+    color: var(--plx-ink-1);
     border-bottom: none;
     text-decoration: none;
+  }
+
+  d-toc a:hover,
+  d-article d-toc a:hover {
+    color: var(--plx-gold-ink);
+  }
+
+  d-toc li::marker {
+    color: var(--plx-gold);
   }
 
   </style>

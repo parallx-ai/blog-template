@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: fill an existing empty appendix.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,11 +22,14 @@ export default function(dom, data) {
     console.warn('No appendix tag found!');
     return;
   }
-  const distillAppendixTag = appendixTag.querySelector('distill-appendix');
+  let distillAppendixTag = appendixTag.querySelector('distill-appendix');
   if (!distillAppendixTag) {
-    const distillAppendix = dom.createElement('distill-appendix');
-    appendixTag.appendChild(distillAppendix);
-    distillAppendix.innerHTML = appendixTemplate(data);
+    distillAppendixTag = dom.createElement('distill-appendix');
+    appendixTag.appendChild(distillAppendixTag);
+  }
+  // OptionalComponents may already have added an empty one.
+  if (!distillAppendixTag.innerHTML.trim()) {
+    distillAppendixTag.innerHTML = appendixTemplate(data);
   }
 
 }
