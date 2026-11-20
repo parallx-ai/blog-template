@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: section and figure numbers,
+// cross-references, section cards and the folding contents.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +20,8 @@ import { collect_citations } from "./helpers/citation.js";
 import { domContentLoaded } from "./helpers/domContentLoaded.js";
 import { parseFrontmatter } from "./components/d-front-matter";
 import optionalComponents from "./transforms/optional-components";
+import { renderStructure } from "./helpers/structure";
+import { renderTOC, enhanceTOC } from "./components/d-toc";
 
 const frontMatter = new FrontMatter();
 
@@ -207,6 +211,27 @@ export const Controller = {
       if (footnotesList) {
         const footnotes = document.querySelectorAll("d-footnote");
         footnotesList.footnotes = footnotes;
+      }
+
+      // Section and figure numbers, cross-references, section cards and the
+      // contents (already done if the page was prerendered; repeating is
+      // harmless).
+      const sections = renderStructure(document);
+      const toc = document.querySelector("d-toc");
+      if (toc) {
+        renderTOC(document, toc, sections);
+        enhanceTOC(document);
+      }
+
+      // Headings may only now have their ids: honour a #section address.
+      if (window.location.hash && !window.scrollY) {
+        let target = null;
+        try {
+          target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        } catch (e) {
+          target = null;
+        }
+        if (target) target.scrollIntoView();
       }
     }
   } // listeners

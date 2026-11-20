@@ -49,6 +49,13 @@
   --plx-code-tag: #de896f;
   --plx-code-punctuation: #a9b0aa;
 
+  /* Cards: the research cards of parallx.ai, on warm paper with a gold
+     hairline that deepens on hover. */
+  --plx-card: #fbf8f0;
+  --plx-card-figure: #eee8da;
+  --plx-card-border: #c6b99b80;
+  --plx-card-border-hover: #b48c42;
+
   /* Type. Display type is the bookish system-serif stack of parallx.ai, with
      Palatino clones ahead of Georgia so Linux and Android get the same feel. */
   --plx-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, "TeX Gyre Pagella", P052, "URW Palladio L", Georgia, serif;

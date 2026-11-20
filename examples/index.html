@@ -95,10 +95,18 @@
       {
         "author": "Alex Example",
         "authorURL": "https://www.parallx.ai/",
-        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}],
+        "core": true
       },
       {
         "author": "Sam Placeholder",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}],
+        "core": true,
+        "corresponding": true,
+        "email": "sam@example.com"
+      },
+      {
+        "author": "Robin Sample",
         "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]
       }
     ],
@@ -116,15 +124,28 @@
     <p>A tour of the publication template: how an article is laid out, how figures, notes and citations work, and what to keep in mind when publishing.</p>
   </d-title>
 
+  <d-section-cards>
+    <a href="#the-page"><img src="cards/page.svg" alt=""></a>
+    <a href="#figures"><img src="cards/figures.svg" alt=""></a>
+    <a href="#notes-citations-and-maths"><img src="cards/notes.svg" alt=""> Notes and citations</a>
+    <a href="#code-and-tables"><img src="cards/code.svg" alt=""></a>
+    <a href="#publishing"><img src="cards/publishing.svg" alt=""></a>
+  </d-section-cards>
+
   <d-byline></d-byline>
 
   <d-article>
+    <d-toc></d-toc>
+
     <p>This page is written with the template it describes. Articles keep the authoring model of <a href="https://github.com/distillpub/template">Distill</a>: a single <code>template.v2.js</code> script, a JSON front matter block, and a handful of custom elements such as <code>&lt;d-cite&gt;</code> and <code>&lt;d-footnote&gt;</code>. What changes is the look, which now follows <a href="https://www.parallx.ai/">parallx.ai</a>.</p>
 
     <h2>The page</h2>
-    <p>The header and footer are the website's own, with the wordmark, and the links to <em>About</em> and <em>Join us</em>. The title block takes a headline in the site's display serif and a short standfirst; the byline is built from the front matter.</p>
+    <p>The header and footer are the website's own, with the wordmark, and the links to <em>About</em> and <em>Join us</em>. The title block takes a headline in the site's display serif and a short standfirst. The byline lists the authors in one block, marking core contributors with an asterisk and the corresponding author with a dagger, and keeps affiliations and the date to the side.</p>
     <aside>Margin notes go in an <code>&lt;aside&gt;</code>. On narrow screens they fall back into the text column.</aside>
     <p>Running text is set in <strong>Inter</strong> at 17.5&nbsp;pixels with generous leading, headings in the bookish system serif the website uses, and links in a deep gold with a fine underline. Every colour comes from a token such as <code>--plx-ink</code> or <code>--plx-gold</code>, which articles can use in their own figures.</p>
+
+    <h3>Sections and contents</h3>
+    <p>Sections are numbered as the page loads, and each number links to its own section. A <code>&lt;d-toc&gt;</code> at the start of the article adds the contents: on wide screens they sit in the left margin, in the style of the website's reading menu, and once you scroll past them they fold into the button at the bottom right of the page. The cards under the title are optional; a <code>&lt;d-section-cards&gt;</code> holds one link and one picture per section, and takes the section's number and title.</p>
 
     <h3>Lists and quotations</h3>
     <ul>
@@ -135,14 +156,14 @@
     <blockquote>Quotations draw their gold rule level with the list bullets and indent their text like list items.</blockquote>
 
     <h2>Figures</h2>
-    <p>Charts made with <a href="https://github.com/parallx-ai/plxviz">plxviz</a> share the palette of the page: gold for the condition a figure is about, grey for the control.</p>
-    <figure class="l-page">
+    <p>Charts made with <a href="https://github.com/parallx-ai/plxviz">plxviz</a> share the palette of the page: gold for the condition a figure is about, grey for the control, as in Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a>.</p>
+    <figure id="fig-probe" class="l-page">
       <img src="probe-light.png" alt="Line chart of probe accuracy by layer: a linear probe rises from 52% at layer 0 to 88% at layer 16, then falls to 66% at layer 32, while a probe trained on shuffled labels stays near 50%. Example data.">
-      <figcaption><strong>Figure 1.</strong> A chart in the Parallax style, made with plxviz from example data (see <code>examples/probe_figure.py</code>). Probing classifiers<d-cite key="alain2016understanding,belinkov2022probing"></d-cite> are a common first look inside a model.</figcaption>
+      <figcaption>A chart in the Parallax style, made with plxviz from example data (see <code>examples/probe_figure.py</code>). Probing classifiers<d-cite key="alain2016understanding,belinkov2022probing"></d-cite> are a common first look inside a model.</figcaption>
     </figure>
 
-    <p>Diagrams drawn as inline SVG can use the colour tokens directly, so they always match the page: the strokes and fills of the figure below are all set with tokens such as <code>--plx-gold</code>.</p>
-    <figure>
+    <p>Diagrams drawn as inline SVG can use the colour tokens directly, so they always match the page: the strokes and fills of Figure&nbsp;<a class="fig-ref" href="#fig-parallax"></a> are all set with tokens such as <code>--plx-gold</code>.</p>
+    <figure id="fig-parallax">
       <svg class="parallax-diagram" viewBox="0 0 600 236" role="img" aria-labelledby="parallax-diagram-title">
         <title id="parallax-diagram-title">Two viewpoints see one object against two different points of a distant background.</title>
         <line class="background" x1="40" y1="44" x2="560" y2="44" />
@@ -162,11 +183,14 @@
         <text x="212.5" y="28">B′</text>
         <text x="327" y="128">O</text>
       </svg>
-      <figcaption><strong>Figure 2.</strong> Parallax: seen from A and from B, the object O falls on different points of the background, A′ and B′. The diagram is inline SVG styled with the template's tokens.</figcaption>
+      <figcaption>Parallax: seen from A and from B, the object O falls on different points of the background, A′ and B′. The diagram is inline SVG styled with the template's tokens.</figcaption>
     </figure>
 
+    <h3>Cross-references</h3>
+    <p>Captioned figures are numbered in order, and their captions open with the number. To refer to one, give it an <code>id</code> and link to it with an empty <code>&lt;a class="fig-ref" href="#fig-probe"&gt;&lt;/a&gt;</code>: the template writes in the number, Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a> here. A link to a section becomes its number, as in <a class="fig-ref" href="#code-and-tables"></a> or <a class="fig-ref" href="#appendix-sections"></a>, and a reference that matches nothing reads <a class="fig-ref" href="#fig-missing"></a>, so it is easy to spot.</p>
+
     <h2>Notes, citations and maths</h2>
-    <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected in the appendix. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>
+    <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected at the end of the page. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>
     <p>Inline maths uses KaTeX, either with the <code>&lt;d-math&gt;</code> element, as in <d-math>h_\ell = f_\ell(h_{\ell-1})</d-math>, or with the delimiters configured in the front matter, as in $$\hat{y} = \mathrm{softmax}(W h_\ell)$$. Display maths is set on its own line:</p>
     <d-math block>
       \mathcal{L}(W) = -\frac{1}{N} \sum_{i=1}^{N} \log p_W\!\left(y_i \mid h_\ell^{(i)}\right)
@@ -185,7 +209,7 @@
     </d-code>
     <p>Tables use tabular figures and hairline rules.</p>
     <table>
-      <caption>Example data, as in Figure 1.</caption>
+      <caption>Example data, as in Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a>.</caption>
       <thead>
         <tr>
           <th>Layer</th>
@@ -222,8 +246,18 @@
       <li><code>url</code>, the article's canonical address, used in the citation;</li>
       <li><code>journal</code>, to cite the article under a name other than Parallax;</li>
       <li><code>githubPath</code>, to invite corrections on GitHub, as this page does;</li>
-      <li><code>license</code>, to add a reuse notice to the appendix.</li>
+      <li><code>license</code>, to add a reuse notice at the end of the page.</li>
     </ol>
+    <p>Authors can also carry <code>"core": true</code> for the asterisk, and <code>"corresponding": true</code> with an <code>"email"</code> for the dagger.</p>
+
+    <h2 appendix>Appendix</h2>
+    <p>Longer material can follow the main text as an appendix in the body of the article, numbered with letters.</p>
+
+    <h3 id="appendix-sections">Appendix sections</h3>
+    <p>Mark the first heading of the appendix with an <code>appendix</code> attribute, as in <code>&lt;h2 appendix&gt;Appendix&lt;/h2&gt;</code>. From there on, sections are lettered rather than numbered: a single appendix with subsections reads A, A.1, A.2, while several appendices read A, B, C. They appear in the contents and can be cross-referenced like any other section.</p>
+
+    <h3>The closing section</h3>
+    <p>Acknowledgements, footnotes, references, updates and corrections, and the citation stay in the closing section of the page, below the appendix.</p>
   </d-article>
 
   <d-appendix>

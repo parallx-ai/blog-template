@@ -173,7 +173,8 @@ figcaption a {
 }
 
 figcaption b,
-figcaption strong {
+figcaption strong,
+figcaption .fig-num {
   font-weight: 600;
   color: var(--plx-ink);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 The Distill Template Authors
  * Modifications copyright 2026 Parallax: long-form typography adapted from
- * the prose styles of www.parallx.ai.
+ * the prose styles of www.parallx.ai; section numbers and cross-references.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,9 +106,36 @@ d-article h2::after {
 
 /* No extra space when the article opens with a section heading. */
 d-article > h2:first-child,
+d-article > d-toc:first-child + h2,
 d-article > .marker:first-child,
 d-article > .marker:first-child + h2 {
   margin-top: 0.5rem;
+}
+
+/* Section numbers (1, 1.1, A.1), added by the template. Each links to its
+   own section. ink-2 rather than ink-3 keeps them above 4.5:1. */
+d-article a.secnum {
+  margin-right: 0.5em;
+  color: var(--plx-ink-2);
+  font-weight: inherit;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-decoration: none;
+  border-bottom: 0;
+}
+
+d-article a.secnum:hover {
+  color: var(--plx-gold-ink);
+  border-bottom: 0;
+}
+
+d-article h4 a.secnum {
+  margin-right: 0.45em;
+}
+
+/* Cross-references to figures and sections. */
+d-article a.fig-ref {
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
 }
 
 d-article h3 {

@@ -1,6 +1,7 @@
 // Copyright 2018 The Distill Template Authors
 // Modifications copyright 2026 Parallax: Parallax journal default, British
-// long dates, and url/journal/githubPath/license from article front matter.
+// long dates, url/journal/githubPath/license from article front matter, and
+// core/corresponding/email author marks.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,6 +63,10 @@ class Author {
     this.affiliation = object.affiliation; // 'Google Brain'
     this.affiliationURL = object.affiliationURL; // 'https://g.co/brain'
     this.affiliations = object.affiliations || []; // new-style affiliations
+    // Parallax byline marks: * core contributor, † corresponding author.
+    this.core = Boolean(object.core);
+    this.corresponding = Boolean(object.corresponding);
+    this.email = object.email;
   }
 
   // 'Chris'

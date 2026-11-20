@@ -1,5 +1,6 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: Parallax design tokens.
+// Modifications copyright 2026 Parallax: Parallax design tokens, contents
+// and section cards.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,8 +22,10 @@ import byline from './d-byline.css';
 import article from './d-article.css';
 import title from './d-title.css';
 import math from './d-math.css';
+import toc from './d-toc.css';
+import sectionCards from './d-section-cards.css';
 
-export const styles = tokens + base + layout + title + byline + article + math + print;
+export const styles = tokens + base + layout + title + sectionCards + byline + article + toc + math + print;
 
 export function makeStyleTag(dom) {
 
