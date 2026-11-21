@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: Parallax typography and colours.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +16,45 @@
  */
 
 html {
-  font-size: 14px;
-	line-height: 1.6em;
-  /* font-family: "Libre Franklin", "Helvetica Neue", sans-serif; */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-  /*, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";*/
+  font-size: 16px;
+  line-height: 1.6;
+  font-family: var(--plx-font-body);
+  font-feature-settings: "ss01", "cv11", "kern";
+  letter-spacing: -0.006em;
+  color: var(--plx-ink);
+  background-color: var(--plx-cream);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-}
-
-@media(min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+  /* Keep anchor targets clear of the sticky header. */
+  scroll-padding-top: calc(var(--plx-nav-height) + 1.5rem);
 }
 
 body {
   margin: 0;
+  color: var(--plx-ink);
+  background-color: var(--plx-cream);
 }
 
 a {
-  color: #004276;
+  color: var(--plx-gold-ink);
+}
+
+a:hover {
+  color: var(--plx-gold-deep);
+}
+
+:focus-visible {
+  outline: 2px solid var(--plx-gold);
+  outline-offset: 4px;
+}
+
+::selection {
+  background-color: rgba(200, 154, 42, 0.3);
+  background-color: color-mix(in srgb, var(--plx-gold) 30%, transparent);
 }
 
 figure {
@@ -44,16 +62,16 @@ figure {
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 table th {
-	text-align: left;
+  text-align: left;
 }
 
 table thead {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--plx-rule-soft);
 }
 
 table thead th {
@@ -85,11 +103,24 @@ sub {
   top: 0.4em;
 }
 
-.kicker,
+/* Small labels. `.eyebrow` is the gold label the website sets above article
+   titles; `.kicker` and `.marker` are the Distill equivalents. */
+
+.eyebrow,
+.kicker {
+  font-family: var(--plx-font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--plx-gold-ink);
+}
+
 .marker {
-  font-size: 15px;
+  font-family: var(--plx-font-body);
+  font-size: 13px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--plx-ink-2);
 }
 
 
@@ -105,50 +136,49 @@ sub {
 
 figure {
   position: relative;
-  margin-bottom: 2.5em;
+  margin-bottom: 2em;
   margin-top: 1.5em;
-}
-
-figcaption+figure {
-
 }
 
 figure img {
   width: 100%;
 }
 
-figure svg text,
-figure svg tspan {
+figure > figcaption {
+  margin-top: 0.75rem;
 }
 
 figcaption,
 .figcaption {
-  color: rgba(0, 0, 0, 0.6);
-  font-size: 12px;
-  line-height: 1.5em;
+  font-family: var(--plx-font-body);
+  color: var(--plx-ink-2);
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 
 @media(min-width: 1024px) {
-figcaption,
-.figcaption {
-    font-size: 13px;
+  figcaption,
+  .figcaption {
+    font-size: 14px;
   }
 }
 
 figure.external img {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  background: var(--plx-white);
+  border: 1px solid var(--plx-rule-soft);
+  box-shadow: 0 1px 8px rgba(17, 20, 17, 0.08);
   padding: 18px;
   box-sizing: border-box;
 }
 
 figcaption a {
-  color: rgba(0, 0, 0, 0.6);
+  color: inherit;
 }
 
 figcaption b,
-figcaption strong, {
+figcaption strong,
+figcaption .fig-num {
   font-weight: 600;
-  color: rgba(0, 0, 0, 1.0);
+  color: var(--plx-ink);
 }

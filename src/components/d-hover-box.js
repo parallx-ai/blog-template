@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax reading-menu panel style.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,19 +36,23 @@ const T = Template('d-hover-box', `
 
 .panel {
   position: absolute;
-  font-size: 1rem;
-  line-height: 1.5em;
+  font-family: var(--plx-font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--plx-ink-1);
   top: 0;
   left: 0;
   width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: rgba(250, 250, 250, 0.95);
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  border: 1px solid var(--plx-rule);
+  border: 1px solid color-mix(in srgb, var(--plx-gold-deep) 45%, var(--plx-rule));
+  background-color: var(--plx-cream);
+  background-color: color-mix(in srgb, var(--plx-cream) 95%, transparent);
+  box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
   box-sizing: border-box;
 
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 </style>

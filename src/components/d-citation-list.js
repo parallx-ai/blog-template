@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed reference titles.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +25,8 @@ d-citation-list .references {
 }
 
 d-citation-list .references .title {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--plx-ink-1);
 }
 `;
 

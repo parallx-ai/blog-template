@@ -1,0 +1,457 @@
+/*
+ * Copyright 2026 Parallax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Styles for figures drawn with figures.v1.js. Colours come from the
+ * --plx-chart-* properties (plxviz's palette) and the template's tokens;
+ * everything can be overridden from an article's own CSS.
+ */
+
+.plx-figure {
+  position: relative;
+}
+
+/* Charts */
+
+.plx-chart {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+  font-family: var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+.plx-chart text {
+  fill: var(--plx-chart-muted);
+  font-size: 12px;
+}
+
+.plx-axis .domain,
+.plx-axis .tick line {
+  stroke: var(--plx-chart-axis);
+}
+
+.plx-axis--grid .tick line {
+  stroke: var(--plx-chart-grid);
+}
+
+.plx-axis text {
+  fill: var(--plx-chart-muted);
+  font-size: 12px;
+}
+
+.plx-chart .plx-axis-label {
+  fill: var(--plx-chart-ink2);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.plx-chart .plx-end-label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.plx-overlay {
+  fill: transparent;
+  pointer-events: all;
+  cursor: crosshair;
+}
+
+.plx-nearest-marker {
+  fill: var(--plx-chart-background, #fff);
+  stroke: var(--plx-chart-ink);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.plx-colorbar {
+  display: block;
+  overflow: visible;
+  font-family: var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+.plx-colorbar text {
+  fill: var(--plx-chart-muted);
+  font-size: 12px;
+}
+
+.plx-colorbar .plx-colorbar__label {
+  fill: var(--plx-chart-ink2);
+  font-size: 13px;
+}
+
+/* Tooltip, like the template's citation and footnote previews */
+
+.plx-tooltip {
+  position: fixed;
+  z-index: 1000;
+  box-sizing: border-box;
+  max-width: min(20rem, calc(100vw - 16px));
+  padding: 0.5rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--plx-gold-deep, #a37f1f) 30%, var(--plx-rule, #cfd6d0));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--plx-cream, #f4f1ea) 96%, transparent);
+  box-shadow: 0 0.4rem 1.4rem rgb(0 0 0 / 10%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--plx-ink-1, #303631);
+  font: 500 12.5px/1.45 var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.plx-tooltip[hidden] {
+  display: none;
+}
+
+.plx-tooltip b,
+.plx-tooltip strong {
+  color: var(--plx-ink, #111411);
+  font-weight: 650;
+}
+
+.plx-tooltip .plx-swatch {
+  display: inline-block;
+  width: 0.65em;
+  height: 0.65em;
+  margin-right: 0.35em;
+  border-radius: 50%;
+  vertical-align: 0.02em;
+}
+
+/* Tokens */
+
+.plx-tokens {
+  font-family: var(--plx-token-font, var(--plx-font-display, Georgia, serif));
+  font-size: 16px;
+  color: var(--plx-chart-ink2);
+}
+
+.plx-tokens__key {
+  margin-bottom: 0.9rem;
+}
+
+.plx-tokens__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.plx-tokens__row + .plx-tokens__row {
+  margin-top: 0.6rem;
+}
+
+.plx-tokens__row:has(> .plx-tokens__label) {
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 0.9rem;
+}
+
+.plx-tokens__label {
+  max-width: 12rem;
+  padding-top: 0.2rem;
+  color: var(--plx-chart-ink2);
+  font: 500 13px/1.4 var(--plx-font-body, Inter, system-ui, sans-serif);
+  text-align: right;
+}
+
+.plx-tokens__text {
+  line-height: 1.85;
+  white-space: pre-wrap;
+}
+
+.plx-token {
+  display: inline-block;
+  padding: 0 2px;
+  border-radius: 3px;
+  line-height: 1.5;
+  white-space: pre;
+  cursor: default;
+  transition: box-shadow 120ms ease;
+}
+
+.plx-token--plain {
+  color: var(--plx-chart-muted);
+}
+
+.plx-token--space {
+  min-width: 6px;
+}
+
+.plx-token--break {
+  padding: 0 3px;
+  font-family: var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-size: 0.8em;
+}
+
+.plx-token:hover,
+.plx-token:focus-visible,
+.plx-token.is-selected {
+  box-shadow: 0 0 0 1.5px var(--plx-chart-ink);
+  outline: none;
+}
+
+/* Controls */
+
+.plx-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--plx-ink-1, #303631);
+  font: 500 13px/1.4 var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+.plx-control__label {
+  color: var(--plx-ink-2, #606a63);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plx-control__value {
+  min-width: 2.5em;
+  color: var(--plx-ink, #111411);
+  font-weight: 600;
+}
+
+.plx-slider input[type="range"] {
+  --plx-fill: 50%;
+  width: clamp(8rem, 30vw, 16rem);
+  height: 13px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.plx-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--plx-gold, #c89a2a) var(--plx-fill), var(--plx-rule, #cfd6d0) var(--plx-fill));
+}
+
+.plx-slider input[type="range"]::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--plx-gold, #c89a2a) var(--plx-fill), var(--plx-rule, #cfd6d0) var(--plx-fill));
+}
+
+.plx-slider input[type="range"]::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--plx-gold, #c89a2a);
+  box-shadow: 0 0 0 4px transparent;
+  transition: box-shadow 120ms ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.plx-slider input[type="range"]::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--plx-gold, #c89a2a);
+}
+
+.plx-slider input[type="range"]:hover::-webkit-slider-thumb,
+.plx-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgb(200 154 42 / 22%);
+}
+
+.plx-slider input[type="range"]:focus-visible {
+  outline: 2px solid var(--plx-gold, #c89a2a);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.plx-toggle__buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.plx-toggle button {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--plx-rule, #cfd6d0);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--plx-ink-1, #303631);
+  font: 600 12.5px/1.4 var(--plx-font-body, Inter, system-ui, sans-serif);
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.plx-toggle button:hover {
+  border-color: var(--plx-gold-deep, #a37f1f);
+}
+
+.plx-toggle button[aria-pressed="true"] {
+  border-color: var(--plx-gold-deep, #a37f1f);
+  background: color-mix(in srgb, var(--plx-gold, #c89a2a) 14%, transparent);
+  color: var(--plx-ink, #111411);
+}
+
+.plx-toggle button:focus-visible {
+  outline: 2px solid var(--plx-gold, #c89a2a);
+  outline-offset: 2px;
+}
+
+/* Ranked tokens */
+
+.plx-topk {
+  color: var(--plx-chart-ink2);
+  font: 500 13px/1.4 var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+.plx-topk__title {
+  margin: 0 0 0.55rem;
+  color: var(--plx-ink-1, #303631);
+  font-weight: 600;
+}
+
+.plx-topk__list,
+d-article .plx-topk__list {
+  display: grid;
+  grid-template-columns: auto minmax(3.5rem, max-content) minmax(3rem, 1fr) auto;
+  gap: 0.3rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plx-topk__row,
+d-article .plx-topk__row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  margin: 0;
+}
+
+.plx-topk__rank {
+  color: var(--plx-chart-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+.plx-topk__token {
+  overflow: hidden;
+  color: var(--plx-chart-ink2);
+  font-family: var(--plx-token-font, var(--plx-font-display, Georgia, serif));
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: pre;
+}
+
+.plx-topk__row.is-highlight .plx-topk__token {
+  color: var(--plx-chart-ink);
+  font-weight: 600;
+}
+
+.plx-topk__bar {
+  height: 12px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--plx-chart-grid) 75%, transparent);
+}
+
+.plx-topk__fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.plx-topk__value {
+  min-width: 2.6em;
+  text-align: right;
+}
+
+/* A number to drag */
+
+.plx-drag-number {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 0.12em;
+  border-bottom: 1.5px dotted var(--plx-gold, #c89a2a);
+  border-radius: 2px 2px 0 0;
+  color: var(--plx-gold-ink, #896600);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  text-align: center;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color 120ms ease;
+}
+
+.plx-drag-number:hover,
+.plx-drag-number.is-dragging {
+  background: color-mix(in srgb, var(--plx-gold, #c89a2a) 14%, transparent);
+}
+
+.plx-drag-number:focus-visible {
+  outline: 2px solid var(--plx-gold, #c89a2a);
+  outline-offset: 2px;
+}
+
+html.plx-dragging,
+html.plx-dragging * {
+  cursor: ew-resize !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Captions that name the colours */
+
+.plx-key {
+  font-weight: 600;
+}
+
+.plx-key--fill {
+  padding: 0 0.25em;
+  border-radius: 3px;
+}
+
+/* Figures that could not be drawn, and figures scaled to fit */
+
+.plx-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--plx-rule, #cfd6d0);
+  border-radius: 4px;
+  color: var(--plx-ink-2, #606a63);
+  font: 500 14px/1.5 var(--plx-font-body, Inter, system-ui, sans-serif);
+}
+
+.plx-fit {
+  overflow: hidden;
+}
+
+@media print {
+  .plx-tooltip,
+  .plx-overlay {
+    display: none;
+  }
+}

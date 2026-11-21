@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: omit fields the article lacks.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,12 +39,16 @@ export function parseBibtex(bibtex) {
 }
 
 export function serializeFrontmatterToBibtex(frontMatter) {
+  const journal = frontMatter.journal && frontMatter.journal.title;
+  const fields = [
+    ['author', frontMatter.bibtexAuthors],
+    ['title', frontMatter.title],
+    ['journal', journal || 'Parallax'],
+    ['year', frontMatter.publishedYear],
+    ['note', frontMatter.url],
+    ['doi', frontMatter.doi],
+  ].filter(([, value]) => value !== undefined && value !== null && value !== '');
   return `@article{${frontMatter.slug},
-  author = {${frontMatter.bibtexAuthors}},
-  title = {${frontMatter.title}},
-  journal = {${frontMatter.journal.title}},
-  year = {${frontMatter.publishedYear}},
-  note = {${frontMatter.url}},
-  doi = {${frontMatter.doi}}
+${fields.map(([key, value]) => `  ${key} = {${value}}`).join(',\n')}
 }`;
 }

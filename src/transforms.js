@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: the Structure transform replaces TOC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +35,7 @@ import OptionalComponents from './transforms/optional-components';
 import Mathematics from './transforms/mathematics';
 import Meta from './transforms/meta';
 import { makeStyleTag } from './styles/styles';
-import TOC from './transforms/toc';
+import Structure from './transforms/structure';
 import Typeset from './transforms/typeset';
 import Polyfills from './transforms/polyfills';
 import CitationList from './transforms/citation-list';
@@ -44,7 +45,7 @@ const transforms = new Map([
   ['HTML', HTML],
   ['makeStyleTag', makeStyleTag],
   ['OptionalComponents', OptionalComponents],
-  ['TOC', TOC],
+  ['Structure', Structure],
   ['Byline', Byline],
   ['Mathematics', Mathematics],
   ['Meta', Meta],

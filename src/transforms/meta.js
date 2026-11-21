@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax favicon and site metadata.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
 
 // TODO: rewrite as template to make order dependencies easier
 
-import favicon from '../assets/distill-favicon.base64';
+import { logos, SITE_NAME } from '../distill-components/parallax-brand';
 import escape from 'escape-html';
 
 export default function(dom, data) {
@@ -28,8 +29,7 @@ export default function(dom, data) {
 
   appendHead(`
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <link rel="icon" type="image/png" href="data:image/png;base64,${favicon}">
-    <link href="/rss.xml" rel="alternate" type="application/rss+xml" title="Articles from Distill">
+    <link rel="icon" type="image/webp" href="${logos.markOnLight}">
   `);
 
   if (data.title) {
@@ -65,26 +65,29 @@ export default function(dom, data) {
     <meta property="article:author" content="${escape(a.firstName)} ${escape(a.lastName)}" />`);
   });
 
+  // Without a "url" in the front matter there is no address or preview
+  // image to advertise, so those tags are left out rather than "undefined".
   appendHead(`
     <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="${escape(data.title)}"/>
-    <meta property="og:description" content="${escape(data.description)}">
-    <meta property="og:url" content="${data.url}"/>
-    <meta property="og:image" content="${data.previewURL}"/>
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:site_name" content="Distill" />
+    <meta property="og:description" content="${escape(data.description)}">${data.url ? `
+    <meta property="og:url" content="${data.url}"/>` : ''}${data.previewURL ? `
+    <meta property="og:image" content="${data.previewURL}"/>` : ''}
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content="${SITE_NAME}" />
   `);
 
   appendHead(`
     <!--  https://dev.twitter.com/cards/types/summary -->
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ParallX_AI">
     <meta name="twitter:title" content="${escape(data.title)}">
-    <meta name="twitter:description" content="${escape(data.description)}">
-    <meta name="twitter:url" content="${data.url}">
+    <meta name="twitter:description" content="${escape(data.description)}">${data.url ? `
+    <meta name="twitter:url" content="${data.url}">` : ''}${data.previewURL ? `
     <meta name="twitter:image" content="${data.previewURL}">
     <meta name="twitter:image:width" content="560">
-    <meta name="twitter:image:height" content="295">
+    <meta name="twitter:image:height" content="295">` : ''}
   `);
 
   // if this is a proprer article, generate Google Scholar meta data

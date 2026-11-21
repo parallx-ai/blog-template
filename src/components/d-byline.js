@@ -1,4 +1,7 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: authors as one block with
+// contribution marks, affiliations and date on the side; British dates; DOI
+// shown only when the article has one.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,39 +15,97 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// import style from '../styles/d-byline.css';
+const affiliationKey = affiliation => (affiliation.name || '') + '\n' + (affiliation.url || '');
 
+function listOf(items) {
+  if (items.length < 2) return items.join('');
+  return items.slice(0, -1).join(', ') + ' and ' + items[items.length - 1];
+}
+
+function link(text, url) {
+  return url ? `<a href="${url}">${text}</a>` : text;
+}
+
+/*
+  Authors run together as one block, each followed by its marks: * for a
+  core contributor ("core": true), † for a corresponding author
+  ("corresponding": true, with an optional "email"). Affiliations and the
+  date sit beside them. When authors have different affiliations, these are
+  numbered and each author carries the numbers of their own.
+*/
 export function bylineTemplate(frontMatter) {
+  const authors = frontMatter.authors || [];
+
+  const affiliations = [];
+  const numbers = new Map();
+  for (const author of authors) {
+    for (const affiliation of author.affiliations || []) {
+      const key = affiliationKey(affiliation);
+      if (!numbers.has(key)) {
+        numbers.set(key, affiliations.length + 1);
+        affiliations.push(affiliation);
+      }
+    }
+  }
+  const signature = author => (author.affiliations || []).map(affiliationKey).join('\n\n');
+  const shared = authors.every(author => signature(author) === signature(authors[0]));
+  const numbered = affiliations.length > 1 && !shared;
+
+  const marks = author => {
+    let text = numbered
+      ? (author.affiliations || []).map(affiliation => numbers.get(affiliationKey(affiliation))).join(',')
+      : '';
+    if (author.core) text += '*';
+    if (author.corresponding) text += '†';
+    return text ? `<sup>${text}</sup>` : '';
+  };
+
+  const names = authors.map((author, i) => `<span class="author">${
+    author.personalURL
+      ? `<a class="name" href="${author.personalURL}">${author.name}</a>`
+      : `<span class="name">${author.name}</span>`
+  }${marks(author)}${i < authors.length - 1 ? ',' : ''}</span>`).join(' ');
+
+  const notes = [];
+  if (authors.some(author => author.core)) {
+    notes.push('<span><sup>*</sup>Core contributor</span>');
+  }
+  const corresponding = authors.filter(author => author.corresponding);
+  if (corresponding.length) {
+    const emails = corresponding.filter(author => author.email)
+      .map(author => `<a href="mailto:${author.email}">${author.email}</a>`);
+    notes.push(`<span><sup>†</sup>${emails.length
+      ? 'Correspondence to ' + listOf(emails)
+      : (corresponding.length > 1 ? 'Corresponding authors' : 'Corresponding author')}</span>`);
+  }
+
   return `
-  <div class="byline grid">
-    <div class="authors-affiliations grid">
-      <h3>Authors</h3>
-      <h3>Affiliations</h3>
-      ${frontMatter.authors.map(author => `
-        <p class="author">
-          ${author.personalURL ? `
-            <a class="name" href="${author.personalURL}">${author.name}</a>` : `
-            <span class="name">${author.name}</span>`}
-        </p>
-        <p class="affiliation">
-        ${author.affiliations.map(affiliation =>
-          affiliation.url ? `<a class="affiliation" href="${affiliation.url}">${affiliation.name}</a>` : `<span class="affiliation">${affiliation.name}</span>`
-        ).join(', ')}
-        </p>
-      `).join('')}
+  <div class="byline">
+    <div class="byline-authors">
+      <h3>${authors.length === 1 ? 'Author' : 'Authors'}</h3>
+      <p>${names}</p>
     </div>
-    <div>
-      <h3>Published</h3>
-      ${frontMatter.publishedDate ? `
-        <p>${frontMatter.publishedMonth} ${frontMatter.publishedDay}, ${frontMatter.publishedYear}</p> ` : `
+    <div class="byline-meta">
+      ${affiliations.length ? `
+      <div class="byline-affiliations">
+        <h3>${affiliations.length === 1 ? 'Affiliation' : 'Affiliations'}</h3>
+        ${affiliations.map((affiliation, i) => `
+        <p>${numbered ? `<sup>${i + 1}</sup>` : ''}${link(affiliation.name, affiliation.url)}</p>`).join('')}
+      </div>` : ''}
+      <div class="byline-published">
+        <h3>Published</h3>
+        ${frontMatter.publishedDate ? `
+        <p>${frontMatter.publishedDateLong}</p>` : `
         <p><em>Not published yet.</em></p>`}
-    </div>
-    <div>
-      <h3>DOI</h3>
+      </div>
       ${frontMatter.doi ? `
-        <p><a href="https://doi.org/${frontMatter.doi}">${frontMatter.doi}</a></p>` : `
-        <p><em>No DOI yet.</em></p>`}
+      <div class="byline-doi">
+        <h3>DOI</h3>
+        <p><a href="https://doi.org/${frontMatter.doi}">${frontMatter.doi}</a></p>
+      </div>` : ''}
     </div>
+    ${notes.length ? `
+    <p class="byline-notes">${notes.join(' ')}</p>` : ''}
   </div>
 `;
 }

@@ -1,0 +1,435 @@
+/*
+ * Copyright 2026 Parallax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Contents, after the reading menu of parallx.ai: a dashed gold track with
+ * a node per section. On screens 1280px and wider it sits in the left
+ * margin beside the opening of the article; once it has scrolled away it
+ * folds into a floating button that opens the same list as a panel.
+ */
+
+:root {
+  --plx-float-size: 2.75rem;
+  --plx-float-icon: 1.25rem;
+  --plx-float-gap: 0.625rem;
+  --plx-float-inset: 1.15rem;
+  --plx-float-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@media (max-width: 520px) {
+  :root {
+    --plx-float-inset: 1rem;
+  }
+}
+
+
+/* The track */
+
+.plx-toc {
+  --toc-rule: color-mix(in srgb, var(--plx-gold-deep) 45%, var(--plx-rule));
+  --toc-track: color-mix(in srgb, var(--plx-gold-deep) 65%, var(--plx-rule));
+  --toc-indent: 0.875rem;
+  color: var(--plx-ink-2);
+  font-family: var(--plx-font-body);
+}
+
+.plx-toc ol {
+  position: relative;
+  margin: 0;
+  padding: 0.15rem 0 0.15rem var(--toc-indent);
+  border-left: 1px dashed var(--toc-track);
+  list-style: none;
+}
+
+.plx-toc > ol {
+  padding-bottom: 0;
+}
+
+.plx-toc > ol::before {
+  content: "";
+  position: absolute;
+  top: -0.7rem;
+  left: -1px;
+  height: 0.7rem;
+  border-left: 1px dashed var(--toc-track);
+}
+
+.plx-toc li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.plx-toc li + li {
+  margin-top: 0.125rem;
+}
+
+.plx-toc li[data-depth="1"] + li {
+  margin-top: 0.3rem;
+}
+
+.plx-toc li > ol {
+  --toc-connector-length: var(--toc-indent);
+  margin-top: 0.2rem;
+  padding-bottom: 0.25rem;
+}
+
+/* A branch leaves the main track... */
+.plx-toc li > ol::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--toc-connector-length) - 1px);
+  width: calc(var(--toc-connector-length) + 1px);
+  border-top: 1px dashed var(--toc-track);
+}
+
+/* ...and each track ends in a small gold cross, */
+.plx-toc ol::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -0.5px;
+  z-index: 1;
+  width: 6px;
+  height: 6px;
+  background:
+    linear-gradient(45deg, transparent 44%, var(--plx-gold-deep) 44% 56%, transparent 56%),
+    linear-gradient(-45deg, transparent 44%, var(--plx-gold-deep) 44% 56%, transparent 56%);
+  transform: translate(-50%, 50%);
+}
+
+/* ...unless the branch rejoins the main track. */
+.plx-toc ol.plx-toc__branch--merges::after {
+  left: calc(-1 * var(--toc-connector-length) - 1px);
+  width: calc(var(--toc-connector-length) + 1px);
+  height: 1px;
+  border-top: 1px dashed var(--toc-track);
+  background: none;
+  transform: none;
+}
+
+.plx-toc a {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  color: var(--plx-ink-2);
+  font: 500 0.76rem/1.35 var(--plx-font-body);
+  text-decoration: none;
+  text-wrap: pretty;
+  border-bottom: 0;
+  transition: color 140ms ease;
+}
+
+.plx-toc li[data-depth="1"] > a {
+  color: var(--plx-ink);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.plx-toc li[data-depth="2"] > a {
+  font-size: 0.75rem;
+  font-weight: 540;
+}
+
+.plx-toc__num {
+  flex: none;
+  color: var(--plx-ink-2);
+  font-variant-numeric: tabular-nums;
+  transition: color 140ms ease;
+}
+
+/* Section nodes: filled for sections, rings for subsections. */
+.plx-toc a::before {
+  content: "";
+  position: absolute;
+  top: 0.675em;
+  left: calc(-1 * var(--toc-indent) - 0.5px);
+  z-index: 1;
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--toc-rule);
+  border-radius: 50%;
+  background: var(--plx-cream);
+  transform: translate(-50%, -50%);
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.plx-toc ol:not(.plx-toc__branch--merges) > li:last-child:not(:has(> ol)) > a::before {
+  top: auto;
+  bottom: 0.675em;
+  transform: translate(-50%, 50%);
+}
+
+.plx-toc li[data-depth="1"] > a::before {
+  border-color: var(--plx-ink-2);
+  background: var(--plx-ink-2);
+}
+
+.plx-toc li > a:hover,
+.plx-toc li > a[aria-current="location"] {
+  color: var(--plx-gold-ink);
+  border-bottom: 0;
+}
+
+.plx-toc li > a[aria-current="location"] {
+  font-weight: 650;
+}
+
+.plx-toc li > a:hover .plx-toc__num,
+.plx-toc li > a[aria-current="location"] .plx-toc__num {
+  color: inherit;
+}
+
+.plx-toc li > a:hover::before,
+.plx-toc li > a[aria-current="location"]::before {
+  border-color: var(--plx-gold-deep);
+  background: var(--plx-gold-deep);
+}
+
+
+/* In the margin */
+
+d-article > d-toc {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  d-article > d-toc:not([hidden]) {
+    display: block;
+    grid-column: screen-start / text-start;
+    position: relative;
+    height: 0;
+    align-self: start;
+  }
+
+  d-toc > .plx-toc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+    width: min(100%, 18rem);
+    padding: 0.8rem 1.25rem 1rem 2rem;
+    border-right: 1px solid var(--plx-rule-soft);
+  }
+
+  d-toc > .plx-toc li + li {
+    margin-top: 0.5rem;
+  }
+
+  d-toc > .plx-toc li[data-depth="1"] + li {
+    margin-top: 0.7rem;
+  }
+
+  d-toc > .plx-toc li > ol {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* A wide figure beside the opening leaves no room: start folded. */
+  d-toc.is-folded > .plx-toc {
+    visibility: hidden;
+  }
+}
+
+
+/* Folded: a floating disc, as on the website, and its panel */
+
+.plx-toc-toggle {
+  position: fixed;
+  right: var(--plx-float-inset);
+  bottom: var(--plx-float-bottom);
+  z-index: 59;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--plx-float-size);
+  height: var(--plx-float-size);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--plx-gold-deep) 42%, var(--plx-cream));
+  border-radius: 50%;
+  color: var(--plx-gold-deep);
+  background:
+    radial-gradient(ellipse at 28% 18%, color-mix(in srgb, var(--plx-gold-soft) 12%, transparent), transparent 72%),
+    var(--plx-cream);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--plx-gold-soft) 7%, transparent),
+    0 3px 12px rgb(0 0 0 / 8%);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(0.45rem);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+}
+
+.plx-toc-toggle.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* A comfortable touch target around the disc. */
+.plx-toc-toggle::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+}
+
+.plx-toc-toggle:hover,
+.plx-toc-toggle[aria-expanded="true"] {
+  border-color: var(--plx-gold-deep);
+  background-color: color-mix(in srgb, var(--plx-gold) 9%, var(--plx-cream));
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--plx-gold-soft) 12%, transparent),
+    0 3px 12px rgb(0 0 0 / 10%);
+}
+
+.plx-toc-toggle svg {
+  display: block;
+  width: var(--plx-float-icon);
+  height: var(--plx-float-icon);
+  stroke-width: 1.5;
+}
+
+.plx-toc-toggle__open,
+.plx-toc-toggle__close {
+  display: inline-flex;
+}
+
+.plx-toc-toggle__close,
+.plx-toc-toggle[aria-expanded="true"] .plx-toc-toggle__open {
+  display: none;
+}
+
+.plx-toc-toggle[aria-expanded="true"] .plx-toc-toggle__close {
+  display: inline-flex;
+}
+
+.plx-toc--panel {
+  display: none;
+}
+
+.plx-toc--panel.is-open {
+  position: fixed;
+  right: var(--plx-float-inset);
+  bottom: calc(var(--plx-float-bottom) + var(--plx-float-size) + var(--plx-float-gap));
+  z-index: 58;
+  display: block;
+  box-sizing: border-box;
+  width: min(22rem, calc(100vw - 2.3rem));
+  max-height: min(70vh, 36rem);
+  max-height: min(70dvh, 36rem);
+  padding: 0.8rem 1rem 0.9rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--toc-rule);
+  background: color-mix(in srgb, var(--plx-cream) 94%, transparent);
+  box-shadow: 0 0.6rem 2rem rgb(0 0 0 / 12%);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  scrollbar-width: thin;
+}
+
+.plx-toc--panel a {
+  align-items: center;
+  min-height: 1.75rem;
+}
+
+.plx-toc--panel a::before,
+.plx-toc--panel ol:not(.plx-toc__branch--merges) > li:last-child:not(:has(> ol)) > a::before {
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+}
+
+.plx-toc__actions {
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--plx-rule-soft);
+}
+
+.plx-toc__top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--toc-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--plx-gold) 5%, var(--plx-cream));
+  color: var(--plx-gold-ink);
+  font: 620 0.82rem/1.25 var(--plx-font-body);
+  cursor: pointer;
+}
+
+.plx-toc__top:hover {
+  border-color: var(--plx-gold-deep);
+}
+
+@media (max-width: 520px) {
+  .plx-toc--panel.is-open {
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+    max-height: min(62vh, 32rem);
+    max-height: min(62dvh, 32rem);
+    border-radius: 0.85rem 0.85rem 0 0;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plx-toc-toggle {
+    transition: none;
+  }
+}
+
+@media print {
+  .plx-toc-toggle,
+  .plx-toc--panel {
+    display: none !important;
+  }
+
+  d-article > d-toc:not([hidden]) {
+    display: block;
+    grid-column: text;
+    height: auto;
+    margin: 0 0 2rem;
+  }
+
+  d-toc > .plx-toc {
+    position: static;
+    width: auto;
+    padding: 0.8rem 0 0 0.5rem;
+    border: 0;
+    visibility: visible;
+  }
+}

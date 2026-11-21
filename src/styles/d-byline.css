@@ -1,5 +1,8 @@
 /*
  * Copyright 2018 The Distill Template Authors
+ * Modifications copyright 2026 Parallax: authors as one block with
+ * contribution marks, affiliations and date on the side; typography and
+ * colours.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,65 +20,117 @@
 d-byline {
   contain: style;
   overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  font-size: 0.8rem;
-  line-height: 1.8em;
-  padding: 1.5rem 0;
+  border-top: 1px solid var(--plx-rule-soft);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding: 1.5rem 0 1.6rem;
   min-height: 1.8em;
+  color: var(--plx-ink-1);
 }
 
-
+/* Authors take the room; affiliations and date sit on the side. */
 d-byline .byline {
-  grid-template-columns: 1fr 1fr;
   grid-column: text;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.1rem 2.5rem;
 }
 
-@media(min-width: 768px) {
+@media(min-width: 600px) {
   d-byline .byline {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-}
-
-d-byline .authors-affiliations {
-  grid-column-end: span 2;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 1em;
-}
-
-@media(min-width: 768px) {
-  d-byline .authors-affiliations {
-    margin-bottom: 0;
+    grid-template-columns: minmax(0, 1fr) fit-content(15rem);
   }
 }
 
 d-byline h3 {
-  font-size: 0.6rem;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.5);
-  margin: 0;
+  font-family: var(--plx-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--plx-ink-2);
+  margin: 0 0 0.3rem;
 }
 
 d-byline p {
   margin: 0;
 }
 
+d-byline .byline-authors p {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  text-wrap: balance;
+}
+
+d-byline .author {
+  white-space: nowrap;
+}
+
+d-byline .name {
+  font-weight: 600;
+  color: var(--plx-ink);
+}
+
+d-byline sup {
+  margin-left: 0.1em;
+  font-size: 0.72em;
+  font-weight: 600;
+  line-height: 0;
+  color: var(--plx-gold-ink);
+  font-variant-numeric: lining-nums;
+}
+
+d-byline .byline-meta {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+}
+
+d-byline .byline-affiliations sup {
+  margin: 0 0.25em 0 0;
+}
+
+@media(max-width: 599px) {
+  d-byline .byline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 2.5rem;
+  }
+}
+
+d-byline .byline-notes {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--plx-ink-2);
+}
+
+d-byline .byline-notes > span {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+
+d-byline .byline-notes sup {
+  margin: 0 0.2em 0 0;
+}
+
 d-byline a,
 d-article d-byline a {
-  color: rgba(0, 0, 0, 0.8);
+  color: inherit;
   text-decoration: none;
   border-bottom: none;
 }
 
+d-byline a:hover,
 d-article d-byline a:hover {
+  color: var(--plx-gold-ink);
   text-decoration: underline;
+  text-decoration-color: var(--plx-gold);
+  text-underline-offset: 3px;
   border-bottom: none;
 }
 
-d-byline p.author {
-  font-weight: 500;
-}
-
-d-byline .affiliations {
-
+d-byline .byline-notes a {
+  color: var(--plx-ink-1);
 }

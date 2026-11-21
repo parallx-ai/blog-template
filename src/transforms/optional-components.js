@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: always add the citation appendix.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -84,6 +85,15 @@ export default function(dom, data) {
   if (!citationList) {
     citationList = dom.createElement('d-citation-list');
     appendix.appendChild(citationList);
+  }
+
+  // Parallax articles always end with "Updates and Corrections" (when the
+  // front matter has a githubPath), "Reuse" (when it has a license) and
+  // "Citation" (once published).
+  let distillAppendix = dom.querySelector('distill-appendix');
+  if (!distillAppendix) {
+    distillAppendix = dom.createElement('distill-appendix');
+    appendix.appendChild(distillAppendix);
   }
 
 }

@@ -1,4 +1,6 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax syntax theme on a dark
+// panel (replaces the default Prism theme).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +24,6 @@ import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-go';
 import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-julia';
-import css from 'prismjs/themes/prism.css';
 
 import { Template } from '../mixins/template.js';
 import { Mutating } from '../mixins/mutating.js';
@@ -30,22 +31,103 @@ import { Mutating } from '../mixins/mutating.js';
 const T = Template('d-code', `
 <style>
 
+:host {
+  letter-spacing: 0;
+}
+
 code {
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.04);
+  font-family: var(--plx-font-mono);
+  font-size: 0.88em;
+  color: var(--plx-ink);
+  background: var(--plx-paper);
   border-radius: 2px;
-  padding: 4px 7px;
-  font-size: 15px;
-  color: rgba(0, 0, 0, 0.6);
+  padding: 0.1em 0.35em;
+  -moz-tab-size: 2;
+  tab-size: 2;
+}
+
+pre {
+  margin: 0 0 1.5em;
 }
 
 pre code {
   display: block;
-  border-left: 2px solid rgba(0, 0, 0, .1);
-  padding: 0 0 0 36px;
+  white-space: pre;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 1.1em 1.4em;
+  color: var(--plx-code-text);
+  background: var(--plx-code-bg);
+  border-radius: 6px;
 }
 
-${css}
+/* Highlighting colours are for the dark block panel; inline code stays
+   in plain ink on paper. */
+pre .token.comment,
+pre .token.prolog,
+pre .token.doctype,
+pre .token.cdata {
+  color: var(--plx-code-comment);
+  font-style: italic;
+}
+
+pre .token.punctuation,
+pre .token.operator,
+pre .token.entity,
+pre .token.url {
+  color: var(--plx-code-punctuation);
+}
+
+pre .token.namespace {
+  opacity: 0.75;
+}
+
+pre .token.property,
+pre .token.boolean,
+pre .token.number,
+pre .token.constant,
+pre .token.symbol,
+pre .token.deleted {
+  color: var(--plx-code-number);
+}
+
+pre .token.selector,
+pre .token.attr-name,
+pre .token.string,
+pre .token.char,
+pre .token.builtin,
+pre .token.inserted {
+  color: var(--plx-code-string);
+}
+
+pre .token.atrule,
+pre .token.attr-value,
+pre .token.keyword {
+  color: var(--plx-code-keyword);
+}
+
+pre .token.function,
+pre .token.class-name {
+  color: var(--plx-code-function);
+}
+
+pre .token.tag,
+pre .token.regex,
+pre .token.important,
+pre .token.variable {
+  color: var(--plx-code-tag);
+}
+
+pre .token.important,
+pre .token.bold {
+  font-weight: 600;
+}
+
+pre .token.italic {
+  font-style: italic;
+}
 </style>
 
 <code id="code-container"></code>
@@ -64,7 +146,7 @@ export class Code extends Mutating(T(HTMLElement)) {
     }
     const language = Prism.languages[this.languageName];
     if (language == undefined) {
-      console.warn(`Distill does not yet support highlighting your code block in "${this.languageName}'.`);
+      console.warn(`The template does not yet support highlighting your code block in "${this.languageName}".`);
       return;
     }
 

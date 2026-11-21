@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed colours.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +19,9 @@ import { body } from '../helpers/layout';
 const T = Template('d-abstract', `
 <style>
   :host {
-    font-size: 1.25rem;
-    line-height: 1.6em;
-    color: rgba(0, 0, 0, 0.7);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--plx-ink-1);
     -webkit-font-smoothing: antialiased;
   }
 

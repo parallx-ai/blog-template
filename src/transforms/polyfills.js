@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: re-add the article's own template.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,11 +53,12 @@ const intersectionObserverPath = 'https://distill.pub/third-party/polyfills/inte
 // `;
 
 
-const addBackIn = `
+// Re-adds the template the article was written against (not Distill's).
+const addBackIn = (templateSrc) => `
 window.addEventListener('WebComponentsReady', function() {
   console.warn('WebComponentsReady');
   const loaderTag = document.createElement('script');
-  loaderTag.src = 'https://distill.pub/template.v2.js';
+  loaderTag.src = ${JSON.stringify(templateSrc).replace(/</g, '\\u003c')};
   document.head.insertBefore(loaderTag, document.head.firstChild);
 });
 `;
@@ -64,7 +66,9 @@ window.addEventListener('WebComponentsReady', function() {
 export default function render(dom) {
   // pull out template script tag
   const templateTag = dom.querySelector('script[src*="template.v2.js"]');
+  let templateSrc = 'template.v2.js';
   if (templateTag) {
+    templateSrc = templateTag.getAttribute('src');
     templateTag.parentNode.removeChild(templateTag);
   } else {
     console.debug('FYI: Did not find template tag when trying to remove it. You may not have added it. Be aware that our polyfills will add it.')
@@ -77,7 +81,7 @@ export default function render(dom) {
 
   // add loader event listener to add tempalrte back in
   const addTag = dom.createElement('script');
-  addTag.innerHTML = addBackIn;
+  addTag.innerHTML = addBackIn(templateSrc);
   dom.head.insertBefore(addTag, dom.head.firstChild);
 
 

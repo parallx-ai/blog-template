@@ -1,5 +1,5 @@
 <!--
-  Copyright 2018 The Distill Template Authors
+  Copyright 2026 Parallax
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,40 +14,143 @@
   limitations under the License.
 -->
 <!doctype html>
+<html lang="en-GB">
 
 <head>
+  <meta charset="utf-8">
   <script src="template.v2.js"></script>
+  <script src="figures.v1.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="utf8">
+  <title>Writing for Parallax</title>
+  <style>
+    /* The interactive figure: chart and tokens side by side when there is
+       room, stacked otherwise. */
+    .probe-explorer {
+      display: grid;
+      gap: 1.25rem 2.5rem;
+    }
+
+    .probe-explorer.is-wide {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      align-items: start;
+    }
+
+    .probe-explorer__controls {
+      grid-column: 1 / -1;
+    }
+
+    .probe-explorer__rule {
+      stroke: var(--plx-chart-ink2);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+    }
+
+    .probe-explorer__dot {
+      stroke: var(--plx-cream);
+      stroke-width: 1.5;
+    }
+
+    .lens-lists {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1.5rem 2.5rem;
+    }
+
+    .probe-explorer__tokens h4 {
+      margin: 0 0 0.75rem;
+      font: 600 13px/1.4 var(--plx-font-body);
+      color: var(--plx-ink-1);
+    }
+
+    /* An inline SVG figure drawn with the template's colour tokens, so it
+       matches the page. */
+    .parallax-diagram {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .parallax-diagram .background {
+      stroke: var(--plx-rule);
+      stroke-width: 1;
+    }
+
+    .parallax-diagram .tick {
+      stroke: var(--plx-rule);
+      stroke-width: 1;
+    }
+
+    .parallax-diagram .ray {
+      stroke: var(--plx-gold);
+      stroke-width: 1.4;
+      stroke-dasharray: 5 5;
+      fill: none;
+    }
+
+    .parallax-diagram .sight {
+      stroke: var(--plx-ink-2);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .parallax-diagram .object {
+      fill: var(--plx-ink);
+    }
+
+    .parallax-diagram .viewpoint {
+      fill: var(--plx-cream);
+      stroke: var(--plx-ink-1);
+      stroke-width: 1.4;
+    }
+
+    .parallax-diagram .projection {
+      fill: var(--plx-gold);
+    }
+
+    .parallax-diagram .angle {
+      stroke: var(--plx-gold-deep);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .parallax-diagram text {
+      fill: var(--plx-ink-1);
+      font-family: var(--plx-font-display);
+      font-size: 17px;
+      font-style: italic;
+      text-anchor: middle;
+    }
+  </style>
 </head>
 
 <body>
   <distill-header></distill-header>
   <d-front-matter>
-    <script id='distill-front-matter' type="text/json">{
-    "title": "Why Momentum Really Works",
-    "description": "Although \" extremely useful for visualizing high-dimensional data, t-SNE plots can sometimes be mysterious or misleading.",
-    "published": "Jan 10, 2017",
+    <script type="text/json">{
+    "title": "Writing for Parallax",
+    "description": "A tour of the Parallax publication template: the page, figures, notes and citations, code and tables.",
+    "published": "November 20, 2026",
     "authors": [
       {
-        "author":"Chris Olah",
-        "authorURL":"https://colah.github.io/",
-        "affiliations": [{"name": "Google Brain"}]
+        "author": "Alex Example",
+        "authorURL": "https://www.parallx.ai/",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}],
+        "core": true
       },
       {
-        "author":"Ludwig Schubert",
-        "authorURL":"https://shancarter.com/",
-        "affiliations": [{"name": "Google Brain", "url": "https://g.co/brain"}]
+        "author": "Sam Placeholder",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}],
+        "core": true,
+        "corresponding": true,
+        "email": "sam@example.com"
       },
       {
-        "author":"Shan Carter",
-        "authorURL":"https://shancarter.com/",
-        "affiliations": [
-          {"name": "Google Brain", "url": "https://g.co/brain"},
-          {"name": "NYT", "url": "https://nytimes.com"}
-        ]
+        "author": "Robin Sample",
+        "affiliations": [{"name": "Parallax", "url": "https://www.parallx.ai/"}]
       }
     ],
+    "githubPath": "parallx-ai/blog-template",
     "katex": {
       "delimiters": [
         {"left": "$$", "right": "$$", "display": false}
@@ -55,129 +158,270 @@
     }
   }</script>
   </d-front-matter>
-  <d-title>
-    <figure style="grid-column: page; margin: 1rem 0;"><img src="momentum.png"
-        style="width:100%; border: 1px solid rgba(0, 0, 0, 0.2);" /></figure>
-    <p>We often think of Momentum<d-cite key="mercier2011humans"></d-cite> as a means of dampening oscillations and
-      speeding up the iterations, leading to faster convergence. But it has other interesting behavior. It allows a
-      larger range of step-sizes to be used, and creates its own oscillations. What is going on?</p>
-  </d-title>
-  <d-byline></d-byline>
-  <d-article>
-    <a class="marker" href="#section-1" id="section-1"><span>1</span></a>
-    <h2>A Brief Survey of Techniques</h2>
-    <p>Before diving in: if you haven’t encountered t-SNE before, here’s what you need to know about the math behind it.
-      The goal is to take a set of points in a high-dimensional space and find a faithful representation of those points
-      in a lower-dimensional space, typically the 2D plane. The algorithm is non-linear and adapts to the underlying
-      data, performing different transformations on different regions. Those differences can be a major source of
-      confusion.</p>
-    <p>This is the first paragraph of the article. Test a long&thinsp;&mdash;&thinsp;dash -- here it is.</p>
-    <p>Test for owner's possessive. Test for "quoting a passage." And another sentence. Or two. Some flopping fins; for
-      diving.</p>
-    <aside>Some text in an aside, margin notes, etc...</aside>
-    <p>Here's a test of an inline equation <d-math>c = a^2 + b^2</d-math>. Also with configurable katex standards just
-      using inline '$' signs: $$x^2$$ And then there's a block equation:</p>
-    <d-math block>
-      c = \pm \sqrt{ \sum_{i=0}^{n}{a^{222} + b^2}}
-    </d-math>
-    <p>Math can also be quite involved:</p>
-    <d-math block>
-      \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}}
-      {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\cdots} } } }
-    </d-math>
-    <a class="marker" href="#section-1.1" id="section-1.1"><span>1.1</span></a>
-    <h3>Citations</h3>
-    <p>
-      <d-slider style="width: 200px;"></d-slider>
-    </p>
-    <p>We can<d-cite bibtex-key="mercier2011humans"></d-cite> also cite <d-cite
-        key="gregor2015draw,mercier2011humans,openai2018charter"></d-cite> external publications. <d-cite
-        key="dong2014image,dumoulin2016guide,mordvintsev2015inceptionism"></d-cite>. We should also be testing footnotes
-      <d-footnote>This will become a hoverable footnote. This will become a hoverable footnote. This will become a
-        hoverable footnote. This will become a hoverable footnote. This will become a hoverable footnote. This will
-        become a hoverable footnote. This will become a hoverable footnote. This will become a hoverable footnote.
-      </d-footnote>. There are multiple footnotes, and they appear in the appendix<d-footnote>Given I have coded them
-        right. Also, here's math in a footnote: <d-math>c = \sum_0^i{x}</d-math>. Also, a citation. Box-ception<d-cite
-          key='gregor2015draw'></d-cite>!</d-footnote> as well.</p>
-    <a class="marker" href="#section-2" id="section-2"><span>2</span></a>
-    <h2>Displaying code snippets</h2>
-    <p>Some inline javascript:<d-code language="javascript">var x = 25;</d-code>. And here's a javascript code block.
-    </p>
-    <d-code block language="javascript">
-      var x = 25;
-      function(x){
-      return x * x;
-      }
-    </d-code>
-    <p>We also support python.</p>
-    <d-code block language="python">
-      # Python 3: Fibonacci series up to n
-      def fib(n):
-      a, b = 0, 1
-      while a < n: print(a, end=' ' ) a, b=b, a+b </d-code>
-        <p>And a table</p>
-        <table>
-          <thead>
-            <tr>
-              <th>First</th>
-              <th>Second</th>
-              <th>Third</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>23</td>
-              <td>654</td>
-              <td>23</td>
-            </tr>
-            <tr>
-              <td>14</td>
-              <td>54</td>
-              <td>34</td>
-            </tr>
-            <tr>
-              <td>234</td>
-              <td>54</td>
-              <td>23</td>
-            </tr>
-          </tbody>
-        </table>
-        <d-figure id="last-figure"></d-figure>
-        <script>
-          const figure = document.querySelector("d-figure#last-figure");
-          const initTag = document.createElement("span");
-          initTag.textContent = "initialized!"
-          figure.appendChild(initTag);
-          figure.addEventListener("ready", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "ready"
-            console.log('ready')
-          });
-          figure.addEventListener("onscreen", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "onscreen"
-            console.log('onscreen')
-          });
-          figure.addEventListener("offscreen", function () {
-            const initTag = figure.querySelector("span");
-            initTag.textContent = "offscreen!"
-            console.log('offscreen')
-          });
-        </script>
-        <p>That's it for the example article!</p>
 
+  <d-title>
+    <h1>Writing for Parallax</h1>
+    <p>A tour of the publication template: how an article is laid out, how figures, notes and citations work, and what to keep in mind when publishing.</p>
+  </d-title>
+
+  <d-section-cards>
+    <a href="#the-page"><img src="cards/page.svg" alt=""></a>
+    <a href="#figures"><img src="cards/figures.svg" alt=""></a>
+    <a href="#notes-citations-and-maths"><img src="cards/notes.svg" alt=""> Notes and citations</a>
+    <a href="#code-and-tables"><img src="cards/code.svg" alt=""></a>
+    <a href="#publishing"><img src="cards/publishing.svg" alt=""></a>
+  </d-section-cards>
+
+  <d-byline></d-byline>
+
+  <d-article>
+    <d-toc></d-toc>
+
+    <p>This page is written with the template it describes. Articles keep the authoring model of <a href="https://github.com/distillpub/template">Distill</a>: a single <code>template.v2.js</code> script, a JSON front matter block, and a handful of custom elements such as <code>&lt;d-cite&gt;</code> and <code>&lt;d-footnote&gt;</code>. What changes is the look, which now follows <a href="https://www.parallx.ai/">parallx.ai</a>.</p>
+
+    <h2>The page</h2>
+    <p>The header and footer are the website's own, with the wordmark, and the links to <em>About</em> and <em>Join us</em>. The title block takes a headline in the site's display serif and a short standfirst. The byline lists the authors in one block, marking core contributors with an asterisk and the corresponding author with a dagger, and keeps affiliations and the date to the side.</p>
+    <aside>Margin notes go in an <code>&lt;aside&gt;</code>. On narrow screens they fall back into the text column.</aside>
+    <p>Running text is set in <strong>Inter</strong> at 17.5&nbsp;pixels with generous leading, headings in the bookish system serif the website uses, and links in a deep gold with a fine underline. Every colour comes from a token such as <code>--plx-ink</code> or <code>--plx-gold</code>, which articles can use in their own figures.</p>
+
+    <h3>Sections and contents</h3>
+    <p>Sections are numbered as the page loads, and each number links to its own section. A <code>&lt;d-toc&gt;</code> at the start of the article adds the contents: on wide screens they sit in the left margin, in the style of the website's reading menu, and once you scroll past them they fold into the button at the bottom right of the page. The cards under the title are optional; a <code>&lt;d-section-cards&gt;</code> holds one link and one picture per section, and takes the section's number and title.</p>
+
+    <h3>Lists and quotations</h3>
+    <ul>
+      <li>Bulleted lists carry gold markers.</li>
+      <li>Numbered lists use muted numerals with tabular figures.</li>
+      <li>Asides, footnotes and citations work as they always have.</li>
+    </ul>
+    <blockquote>Quotations draw their gold rule level with the list bullets and indent their text like list items.</blockquote>
+
+    <h2>Figures</h2>
+    <p>Charts made with <a href="https://github.com/parallx-ai/plxviz">plxviz</a> share the palette of the page: gold for the condition a figure is about, grey for the control, as in Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a>.</p>
+    <figure id="fig-probe" class="l-page">
+      <img src="probe-light.png" alt="Line chart of probe accuracy by layer: a linear probe rises from 52% at layer 0 to 88% at layer 16, then falls to 66% at layer 32, while a probe trained on shuffled labels stays near 50%. Example data.">
+      <figcaption>A chart in the Parallax style, made with plxviz from example data (see <code>examples/probe_figure.py</code>). Probing classifiers<d-cite key="alain2016understanding,belinkov2022probing"></d-cite> are a common first look inside a model.</figcaption>
+    </figure>
+
+    <p>Diagrams drawn as inline SVG can use the colour tokens directly, so they always match the page: the strokes and fills of Figure&nbsp;<a class="fig-ref" href="#fig-parallax"></a> are all set with tokens such as <code>--plx-gold</code>.</p>
+    <figure id="fig-parallax">
+      <svg class="parallax-diagram" viewBox="0 0 600 236" role="img" aria-labelledby="parallax-diagram-title">
+        <title id="parallax-diagram-title">Two viewpoints see one object against two different points of a distant background.</title>
+        <line class="background" x1="40" y1="44" x2="560" y2="44" />
+        <line class="tick" x1="40" y1="38" x2="40" y2="50" />
+        <line class="tick" x1="560" y1="38" x2="560" y2="50" />
+        <path class="ray" d="M300 118 387.5 44 M300 118 212.5 44" />
+        <path class="sight" d="M200 196 300 118 400 196" />
+        <path class="angle" d="M276 136.7 Q300 152 324 136.7" />
+        <circle class="object" cx="300" cy="118" r="13" />
+        <circle class="projection" cx="387.5" cy="44" r="4.5" />
+        <circle class="projection" cx="212.5" cy="44" r="4.5" />
+        <circle class="viewpoint" cx="200" cy="196" r="6" />
+        <circle class="viewpoint" cx="400" cy="196" r="6" />
+        <text x="200" y="226">A</text>
+        <text x="400" y="226">B</text>
+        <text x="387.5" y="28">A′</text>
+        <text x="212.5" y="28">B′</text>
+        <text x="327" y="128">O</text>
+      </svg>
+      <figcaption>Parallax: seen from A and from B, the object O falls on different points of the background, A′ and B′. The diagram is inline SVG styled with the template's tokens.</figcaption>
+    </figure>
+
+    <h3>Cross-references</h3>
+    <p>Captioned figures are numbered in order, and their captions open with the number. To refer to one, give it an <code>id</code> and link to it with an empty <code>&lt;a class="fig-ref" href="#fig-probe"&gt;&lt;/a&gt;</code>: the template writes in the number, Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a> here. A link to a section becomes its number, as in <a class="fig-ref" href="#code-and-tables"></a> or <a class="fig-ref" href="#appendix-sections"></a>, and a reference that matches nothing reads <a class="fig-ref" href="#fig-missing"></a>, so it is easy to spot.</p>
+
+    <h3>Interactive figures</h3>
+    <p>Figures can also be drawn in the browser. <code>figures.v1.js</code>, loaded after the template, bundles <a href="https://d3js.org">d3</a> with helpers in plxviz's style: charts with axes and error bars, colours by role, tooltips, state shared between figures and the controls that change it, readers for JSON, CSV, NumPy and Parquet files, model text shaded token by token, and ranked lists of tokens. Figure&nbsp;<a class="fig-ref" href="#fig-explorer"></a> is drawn this way, from a Parquet file of accuracies and a NumPy array of scores.</p>
+    <figure id="fig-explorer" class="l-page">
+      <div id="probe-explorer"></div>
+      <figcaption>Choose a layer with the slider or by clicking the chart: the exchange is shaded by the probe's score for each token at that layer, blue where it reads the concept and coral where it reads its absence. The control was trained on shuffled labels; whiskers show 95% intervals over five seeds. Example data, drawn in the browser.</figcaption>
+    </figure>
+    <script>
+      // One state for the slider, the chart and the text.
+      const probeLayer = plx.state({ layer: 16 });
+
+      plx.figure("#probe-explorer", async (mount, context) => {
+        const [rows, tokens, scores] = await Promise.all([
+          plx.load("data/probe-layers.parquet"),
+          plx.load("data/tokens.json"),
+          plx.load("data/token-scores.npy"),
+        ]);
+        const color = plx.roles({ intervention: "Linear probe", control: "Shuffled labels" });
+        const layout = d3.select(mount).append("div.probe-explorer").classed("is-wide", context.width >= 760);
+        plx.slider(layout.append("div.probe-explorer__controls"),
+          { state: probeLayer, key: "layer", min: 0, max: 32, label: "Layer" });
+
+        // Accuracy by layer, with the chosen layer marked.
+        const c = plx.chart(layout.append("div"), { height: 270, margin: { right: 112 } });
+        c.x.domain([0, 32]);
+        c.y.domain([0.4, 1]);
+        plx.axes(c, { xLabel: "Layer", yLabel: "Accuracy", yFormat: ".0%", xTickValues: [0, 8, 16, 24, 32] });
+        const series = [["Linear probe", "probe"], ["Shuffled labels", "shuffled"]].map(([name, key]) =>
+          ({ name, key, color: color(name), values: rows.map(r => [r.layer, r[key]]) }));
+        const line = d3.line().x(d => c.x(d[0])).y(d => c.y(d[1]));
+        c.g.appendMany("path", series).at({ d: s => line(s.values), stroke: s => s.color, fill: "none", strokeWidth: 2.25 });
+        plx.labelEnds(c, series);
+        // 95% intervals over five seeds, at every fourth layer.
+        for (const s of series) {
+          plx.errorBars(c, rows.filter(r => r.layer % 4 === 0), {
+            x: r => c.x(r.layer), lo: r => c.y(r[s.key + "_lo"]), hi: r => c.y(r[s.key + "_hi"]),
+          });
+        }
+        const rule = c.g.append("line.probe-explorer__rule").at({ y1: 0, y2: c.height });
+        const dots = c.g.appendMany("circle.probe-explorer__dot", series).at({ r: 4.5, fill: s => s.color });
+        const pct = d3.format(".0%");
+        plx.nearest(c, series.flatMap(s => rows.map(r => ({ s, r }))), {
+          x: d => c.x(d.r.layer),
+          y: d => c.y(d.r[d.s.key]),
+          html: d => "<b>Layer " + d.r.layer + "</b><br><span class='plx-swatch' style='background:" + d.s.color +
+            "'></span>" + d.s.name + ": " + pct(d.r[d.s.key]) +
+            " (" + pct(d.r[d.s.key + "_lo"]) + "\u2013" + pct(d.r[d.s.key + "_hi"]) + ")",
+        });
+        c.svg.on("click", event => {
+          const layer = Math.round(c.x.invert(d3.pointer(event, c.g.node())[0]));
+          probeLayer.set({ layer: Math.max(0, Math.min(32, layer)) });
+        });
+
+        // The exchange, shaded by the probe's score at the chosen layer.
+        const panel = layout.append("div.probe-explorer__tokens");
+        const heading = panel.append("h4");
+        const text = plx.tokens(panel, tokens.map(t => [t, 0]), { domain: [-1, 1], label: "Probe score" });
+
+        context.watch(probeLayer, ({ layer }) => {
+          rule.at({ x1: c.x(layer), x2: c.x(layer) });
+          dots.at({ cx: c.x(layer), cy: s => c.y(rows[layer][s.key]) });
+          heading.text("Probe scores at layer " + layer);
+          text.update(tokens.map((t, i) => scores.get(layer, i)));
+        });
+      });
+
+      plx.captionKey("#fig-explorer", { "probe's": "gold", "shuffled labels": { bg: "control" } });
+    </script>
+    <p>The figure is a short script in the page. <code>plx.figure</code> draws it when it comes into view, and again when its width changes; <code>plx.load</code> reads each file once; one <code>plx.state</code> links the slider, the chart and the text:</p>
+    <d-code block language="javascript">
+      const probeLayer = plx.state({ layer: 16 });
+
+      plx.figure("#probe-explorer", async (mount, context) => {
+        const rows = await plx.load("data/probe-layers.parquet");
+        const c = plx.chart(mount, { height: 270 });
+        c.x.domain([0, 32]);
+        c.y.domain([0.4, 1]);
+        plx.axes(c, { xLabel: "Layer", yFormat: ".0%" });
+        // ...lines, a tooltip with plx.nearest, the text with plx.tokens...
+        context.watch(probeLayer, ({ layer }) => { /* move the marker, recolour the tokens */ });
+      });
+    </d-code>
+    <p>Text can follow the same state. Drag the number in this sentence, or select it and use the arrow keys: at layer <span id="layer-number">16</span>, the linear probe is right <span id="layer-probe">88%</span> of the time and the control <span id="layer-control">51%</span>, and the likeliest next token after &ldquo;All the tests&rdquo; is <span id="layer-next">&ldquo;failed&rdquo;</span>. Figures&nbsp;<a class="fig-ref" href="#fig-explorer"></a> and <a class="fig-ref" href="#fig-lens"></a> move with it.</p>
+    <script>
+      plx.dragNumber("#layer-number", { state: probeLayer, key: "layer", min: 0, max: 32, label: "Layer" });
+      Promise.all([plx.load("data/probe-layers.parquet"), plx.load("data/logit-lens.json")]).then(([rows, lens]) => {
+        const pct = d3.format(".0%");
+        probeLayer.on(({ layer }) => {
+          d3.select("#layer-probe").text(pct(rows[layer].probe));
+          d3.select("#layer-control").text(pct(rows[layer].shuffled));
+          d3.select("#layer-next").text("\u201c" + lens.layers[layer][0][0].trim() + "\u201d");
+        });
+      });
+    </script>
+    <figure id="fig-lens" class="l-body-outset">
+      <div id="lens-lists"></div>
+      <figcaption>The likeliest next tokens after &ldquo;Assistant: All the tests&rdquo;, read from the chosen layer with a logit lens, and at the last layer. Midway through, the model leans towards failed before it says passed. Example data.</figcaption>
+    </figure>
+    <script>
+      plx.figure("#lens-lists", async mount => {
+        const lens = await plx.load("data/logit-lens.json");
+        const colors = { " failed": "intervention", " passed": "second" };
+        const layout = d3.select(mount).append("div.lens-lists");
+        const chosen = plx.topk(layout.append("div"), [], { colors, title: "Layer 16" });
+        plx.topk(layout.append("div"), lens.layers[32], { colors, title: "Last layer (32)" });
+        const title = d3.select(chosen.node).select(".plx-topk__title");
+        return probeLayer.on(({ layer }) => {
+          title.text("Layer " + layer);
+          chosen.update(lens.layers[layer]);
+        });
+      });
+      plx.captionKey("#fig-lens", { failed: "gold", passed: "blue" });
+    </script>
+
+    <h2>Notes, citations and maths</h2>
+    <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected at the end of the page. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>
+    <p>Inline maths uses KaTeX, either with the <code>&lt;d-math&gt;</code> element, as in <d-math>h_\ell = f_\ell(h_{\ell-1})</d-math>, or with the delimiters configured in the front matter, as in $$\hat{y} = \mathrm{softmax}(W h_\ell)$$. Display maths is set on its own line:</p>
+    <d-math block>
+      \mathcal{L}(W) = -\frac{1}{N} \sum_{i=1}^{N} \log p_W\!\left(y_i \mid h_\ell^{(i)}\right)
+    </d-math>
+
+    <h2>Code and tables</h2>
+    <p>Code blocks sit on a dark panel in the footer's ink, highlighted with the colours of the charts; inline code stays on a pale tint.</p>
+    <d-code block language="python">
+      import torch
+
+      def probe_accuracy(probe, activations, labels):
+          """Share of examples the probe labels correctly."""
+          with torch.no_grad():
+              predictions = probe(activations).argmax(dim=-1)
+          return (predictions == labels).float().mean().item()
+    </d-code>
+    <p>Tables use tabular figures and hairline rules.</p>
+    <table>
+      <caption>Example data, as in Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a>.</caption>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Probe accuracy</th>
+          <th>Shuffled labels</th>
+          <th>Selectivity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>8</td>
+          <td>69.0%</td>
+          <td>50.0%</td>
+          <td>19.0</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>88.0%</td>
+          <td>51.0%</td>
+          <td>37.0</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>79.0%</td>
+          <td>52.0%</td>
+          <td>27.0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Publishing</h2>
+    <p>Serve the contents of <code>dist/</code> together: <code>template.v2.js</code> loads Inter from the <code>fonts/</code> folder next to it, so no third-party font service is contacted, and <code>figures.v1.js</code> sits beside it for articles with interactive figures. Beyond the usual title, description, date and authors, the front matter accepts a few optional keys:</p>
+    <ol>
+      <li><code>url</code>, the article's canonical address, used in the citation;</li>
+      <li><code>journal</code>, to cite the article under a name other than Parallax;</li>
+      <li><code>githubPath</code>, to invite corrections on GitHub, as this page does;</li>
+      <li><code>license</code>, to add a reuse notice at the end of the page.</li>
+    </ol>
+    <p>Authors can also carry <code>"core": true</code> for the asterisk, and <code>"corresponding": true</code> with an <code>"email"</code> for the dagger.</p>
+
+    <h2 appendix>Appendix</h2>
+    <p>Longer material can follow the main text as an appendix in the body of the article, numbered with letters.</p>
+
+    <h3 id="appendix-sections">Appendix sections</h3>
+    <p>Mark the first heading of the appendix with an <code>appendix</code> attribute, as in <code>&lt;h2 appendix&gt;Appendix&lt;/h2&gt;</code>. From there on, sections are lettered rather than numbered: a single appendix with subsections reads A, A.1, A.2, while several appendices read A, B, C. They appear in the contents and can be cross-referenced like any other section.</p>
+
+    <h3>The closing section</h3>
+    <p>Acknowledgements, footnotes, references, updates and corrections, and the citation stay in the closing section of the page, below the appendix.</p>
   </d-article>
 
   <d-appendix>
+    <h3>Acknowledgements</h3>
+    <p>This template adapts the <a href="https://github.com/distillpub/template">Distill template</a> by Shan Carter, Ludwig Schubert and contributors, under the Apache License 2.0. Inter is by Rasmus Andersson and the Inter Project Authors, under the SIL Open Font License.</p>
 
-    <h3>Contributions</h3>
-    <p>Some text describing who did what.</p>
-    <h3>Reviewers</h3>
-    <p>Some text with links describing who reviewed the article.</p>
-
-    <d-bibliography src="bibliography.bib"></d-bibliography>
+    <d-bibliography src="parallax-references.bib"></d-bibliography>
   </d-appendix>
 
   <distill-footer></distill-footer>
 
 </body>
+
+</html>

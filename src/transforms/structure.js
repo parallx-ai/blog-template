@@ -1,4 +1,4 @@
-// Copyright 2018 The Distill Template Authors
+// Copyright 2026 Parallax
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { renderStructure } from '../helpers/structure';
 import { renderTOC } from '../components/d-toc';
 
+/* Section and figure numbers, cross-references, section cards and the
+   contents. The browser repeats this on load (see controller.js). */
 export default function(dom) {
-  const article = dom.querySelector('d-article');
+  const sections = renderStructure(dom);
   const toc = dom.querySelector('d-toc');
-  if (toc) {
-    const headings = article.querySelectorAll('h2, h3');
-    renderTOC(toc, headings);
-    toc.setAttribute('prerendered', 'true');
-  }
+  if (toc) renderTOC(dom, toc, sections);
 }

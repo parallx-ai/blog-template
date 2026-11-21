@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: themed backlinks.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,8 +27,13 @@ d-footnote-list > * {
 }
 
 d-footnote-list a.footnote-backlink {
-  color: rgba(0,0,0,0.3);
+  color: var(--plx-ink-2);
+  border-bottom: none;
   padding-left: 0.5em;
+}
+
+d-footnote-list a.footnote-backlink:hover {
+  color: var(--plx-gold-ink);
 }
 
 </style>

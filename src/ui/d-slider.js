@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: gold slider.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +40,7 @@ const T = Template('d-slider', `
     height: 3px;
     width: 100%;
     border-radius: 2px;
-    background-color: hsla(0, 0%, 0%, 0.2);
+    background-color: var(--plx-rule);
   }
 
   .track-fill {
@@ -47,7 +48,7 @@ const T = Template('d-slider', `
     top: 9px;
     height: 3px;
     border-radius: 4px;
-    background-color: hsl(24, 100%, 50%);
+    background-color: var(--plx-gold);
   }
 
   .knob-container {
@@ -61,7 +62,7 @@ const T = Template('d-slider', `
     left: -6px;
     width: 13px;
     height: 13px;
-    background-color: hsl(24, 100%, 50%);
+    background-color: var(--plx-gold);
     border-radius: 50%;
     transition-property: transform;
     transition-duration: 0.18s;
@@ -77,7 +78,7 @@ const T = Template('d-slider', `
     left: -6px;
     width: 13px;
     height: 13px;
-    background-color: hsla(0, 0%, 0%, 0.1);
+    background-color: rgba(200, 154, 42, 0.18);
     border-radius: 50%;
     transition-property: transform;
     transition-duration: 0.18s;
@@ -99,7 +100,7 @@ const T = Template('d-slider', `
   .ticks .tick {
     position: absolute;
     height: 100%;
-    border-left: 1px solid hsla(0, 0%, 0%, 0.2);
+    border-left: 1px solid var(--plx-rule);
   }
 
 </style>

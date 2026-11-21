@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: Parallax review screen.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,11 +14,11 @@
 // limitations under the License.
 
 import { Template } from '../mixins/template';
+import { logos, PRODUCTION_HOSTNAMES } from '../distill-components/parallax-brand';
 
 // This overlay is not secure.
 // It is only meant as a social deterrent.
 
-const productionHostname = 'distill.pub';
 const T = Template('d-interstitial', `
 <style>
 
@@ -27,7 +28,9 @@ const T = Template('d-interstitial', `
   height: 100%;
   top: 0;
   left: 0;
-  background: white;
+  background: var(--plx-cream);
+  color: var(--plx-ink-1);
+  font-family: var(--plx-font-body);
 
   opacity: 1;
   visibility: visible;
@@ -47,75 +50,67 @@ const T = Template('d-interstitial', `
   padding: 2em;
 }
 
+.logo {
+  display: block;
+  width: 120px;
+  height: auto;
+  margin-bottom: 3em;
+}
+
 h1 {
+  font-family: var(--plx-font-display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--plx-ink);
   text-decoration: underline;
-  text-decoration-color: hsl(0,100%,40%);
-  -webkit-text-decoration-color: hsl(0,100%,40%);
+  text-decoration-color: var(--plx-gold);
+  -webkit-text-decoration-color: var(--plx-gold);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
   margin-bottom: 1em;
-  line-height: 1.5em;
 }
 
 input[type="password"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
-  -webkit-border-radius: none;
-  -moz-border-radius: none;
-  -ms-border-radius: none;
-  -o-border-radius: none;
-  border-radius: none;
+  border-radius: 0;
   outline: none;
 
+  font-family: inherit;
   font-size: 18px;
+  color: var(--plx-ink);
   background: none;
-  width: 25%;
-  padding: 10px;
+  width: 50%;
+  padding: 10px 0;
   border: none;
-  border-bottom: solid 2px #999;
+  border-bottom: solid 2px var(--plx-rule);
   transition: border .3s;
 }
 
 input[type="password"]:focus {
-  border-bottom: solid 2px #333;
+  border-bottom: solid 2px var(--plx-gold);
 }
 
 input[type="password"].wrong {
-  border-bottom: solid 2px hsl(0,100%,40%);
+  border-bottom: solid 2px #a6553e;
 }
 
 p small {
-  color: #888;
-}
-
-.logo {
-  position: relative;
-  font-size: 1.5em;
-  margin-bottom: 3em;
-}
-
-.logo svg {
-  width: 36px;
-  position: relative;
-  top: 6px;
-  margin-right: 2px;
-}
-
-.logo svg path {
-  fill: none;
-  stroke: black;
-  stroke-width: 2px;
+  color: var(--plx-ink-2);
 }
 
 </style>
 
 <div class="overlay">
   <div class="container">
+    <img class="logo" src="${logos.wordmarkOnLight}" alt="Parallax">
     <h1>This article is in review.</h1>
     <p>Do not share this URL or the contents of this article. Thank you!</p>
-    <input id="interstitial-password-input" type="password" name="password" autofocus/>
+    <input id="interstitial-password-input" type="password" name="password" aria-label="Review password" autofocus/>
     <p><small>Enter the password we shared with you as part of the review process to view the article.</small></p>
   </div>
 </div>
@@ -146,7 +141,7 @@ export class Interstitial extends T(HTMLElement) {
 
   shouldRemoveSelf() {
     // should never be visible in production
-    if (window && window.location.hostname === productionHostname) {
+    if (window && PRODUCTION_HOSTNAMES.includes(window.location.hostname)) {
       console.warn('Interstitial found on production, hiding it.');
       return true
     }
@@ -162,7 +157,7 @@ export class Interstitial extends T(HTMLElement) {
   }
 
   localStorageIdentifier() {
-    const prefix = 'distill-drafts'
+    const prefix = 'parallax-drafts'
     const suffix = 'interstitial-password-correct';
     return prefix + (window ? window.location.pathname : '-') + suffix
   }
