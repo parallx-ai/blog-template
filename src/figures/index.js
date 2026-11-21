@@ -22,12 +22,12 @@
   It provides `plx` (and `d3`, if the page has none):
 
     plx.figure(mount, draw)          draw when in view, redraw when the width changes
-    plx.chart / axes / labelEnds / colorbar        charts in plxviz's style
+    plx.chart / axes / labelEnds / errorBars / colorbar   charts in plxviz's style
     plx.color / roles / series / ramp / sequential / diverging / tint / textOn
     plx.tooltip / hover / nearest    readouts
-    plx.state / slider / toggle      shared state and controls
+    plx.state / slider / toggle / dragNumber   shared state and controls
     plx.load / npy / parquet         data: JSON, CSV, TSV, text, NumPy, Parquet
-    plx.tokens / token               model text shaded token by token
+    plx.tokens / token / topk        model text shaded token by token; ranked tokens
     plx.lazy / fit / captionKey      page helpers
 
   The file name carries the major version: changes that could break a
@@ -46,10 +46,10 @@ export {
   palette, color, rgb, mix, tint, luminance, contrast, textOn, readable, ramp, oklch, fromOklch, tone,
   sequential, diverging, roles, series, chartProperties,
 } from './colors';
-export { chart, axes, labelEnds, colorbar } from './chart';
-export { tooltip, hover, nearest, state, slider, toggle } from './interact';
+export { chart, axes, labelEnds, errorBars, colorbar } from './chart';
+export { tooltip, hover, nearest, state, slider, toggle, dragNumber } from './interact';
 export { load, npy, parquet } from './data';
-export { tokens, token } from './tokens';
+export { tokens, token, topk } from './tokens';
 export { figure, fit, lazy, captionKey } from './page';
 
 installJetpack(d3);

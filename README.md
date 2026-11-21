@@ -96,20 +96,20 @@ It defines `plx`, and `d3` if the page has none, and draws in plxviz's colours:
 | Functions | What they do |
 | --- | --- |
 | `plx.figure(mount, draw)` | Draws when the figure comes into view (or is printed), and again when its width changes. `draw(mount, context)` may be async; `context.watch(state, fn)` follows a state for as long as that drawing lasts. Errors show in place of the figure. |
-| `plx.chart`, `plx.axes`, `plx.labelEnds`, `plx.colorbar` | An SVG with margins and scales; axes with light gridlines; line names at their ends instead of a legend; a stepped colour bar. |
+| `plx.chart`, `plx.axes`, `plx.labelEnds`, `plx.errorBars`, `plx.colorbar` | An SVG with margins and scales; axes with light gridlines; line names at their ends instead of a legend; error bars, as plxviz's whiskers (ink, with caps) or as its round coloured lines; a stepped colour bar. |
 | `plx.color`, `plx.roles`, `plx.series`, `plx.ramp`, `plx.tint`, `plx.textOn` | plxviz's colours: by name or by role (`roles({control: "Base", intervention: "Steered"})`), the series order, the ordered ramp, pale tints, readable text on a fill. |
 | `plx.sequential`, `plx.diverging`, `plx.tone` | plxviz's heatmap scales. |
 | `plx.tooltip`, `plx.hover`, `plx.nearest` | One tooltip for the page, readouts on hover, and the point nearest the pointer. |
-| `plx.state`, `plx.slider`, `plx.toggle` | State shared between figures, and controls bound to it. |
+| `plx.state`, `plx.slider`, `plx.toggle`, `plx.dragNumber` | State shared between figures, and controls bound to it: a slider, a row of buttons, and a number readers drag left or right, in a sentence for instance (it also takes the arrow keys, and is announced as a slider). |
 | `plx.load`, `plx.npy`, `plx.parquet` | Files read once per page and parsed by extension: JSON, CSV and TSV (typed), text, NumPy `.npy` (floats from 16 to 64 bits, integers, booleans) and Parquet (rows as objects; Snappy or uncompressed, the pandas and pyarrow defaults). |
-| `plx.tokens`, `plx.token` | Model text shaded token by token as plxviz draws it, with a colour bar and a tooltip per token; `update(values)` recolours it. |
+| `plx.tokens`, `plx.token`, `plx.topk` | Model text shaded token by token as plxviz draws it, with a colour bar and a tooltip per token (`update(values)` recolours it); ranked lists of tokens with a bar for each value, such as a model's likeliest next tokens, coloured like plxviz's bar charts (`update(items)` redraws them). |
 | `plx.fit`, `plx.captionKey`, `plx.lazy` | Scale a fixed-size figure to its column; colour words of a caption to serve as its legend; run something when an element comes into view. |
 
 D3 selections also get a few shortcuts: `append("div.note")` with classes and an id, `at({...})` and `st({...})` for several attributes or styles at once, `translate([x, y])` and `appendMany(tag, data)`.
 
 The colours come from plxviz: `src/figures/palette.json` is a copy of plxviz's `docs/palette.json` (`viz colors --json`). When plxviz's palette changes, run `node bin/sync-palette.js path/to/plxviz` and rebuild; the tests check the colour formulas against reference values computed by plxviz. Every page made with the template also has these colours as CSS properties, `--plx-chart-gold`, `--plx-chart-control`, `--plx-chart-grid` and so on, with or without the toolkit.
 
-The file name carries the major version, so published articles keep working: changes that could break existing figures go into `figures.v2.js`. Figure 3 of `examples/index.html` uses most of the toolkit; `examples/data/make_data.py` writes its data.
+The file name carries the major version, so published articles keep working: changes that could break existing figures go into `figures.v2.js`. Figures 3 and 4 of `examples/index.html`, and the sentence between them, use most of the toolkit; `examples/data/make_data.py` writes their data.
 
 ## Design tokens
 

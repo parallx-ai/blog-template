@@ -16,11 +16,12 @@
   Model text, token by token, as plxviz draws it: each token's background
   shaded by a value (a probe score, an attribution, a steering effect), the
   spaces kept as gaps, line breaks shown as a return arrow, and lines that
-  wrap between tokens, never inside one.
+  wrap between tokens, never inside one. Also ranked lists of tokens, such as
+  a model's likeliest next tokens.
 */
 
 import * as d3 from 'd3';
-import { diverging, sequential, textOn } from './colors';
+import { color, diverging, sequential, textOn } from './colors';
 import { colorbar } from './chart';
 import { hover } from './interact';
 import { resolve, escapeHTML } from './util';
@@ -176,4 +177,68 @@ function box(parent, d, text, focusable) {
   span.__data__ = d;
   parent.appendChild(span);
   return span;
+}
+
+const reducedMotion = () =>
+  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/*
+  topk(target, items, options) appends a ranked list of tokens, each with a
+  bar for its value, as for a model's likeliest next tokens. items:
+  [[token, probability], ...] or [{token, value}, ...], in any order.
+
+  options: k (how many to show, 8), format (".0%"), max (the value of a full
+  bar: 1 when every value lies between 0 and 1, otherwise the largest),
+  title, and colours as in plxviz's bar charts: highlight (a token or a list
+  of tokens) draws those in the accent ("intervention", gold) and the rest in
+  grey; colors ({token: colour}) names a colour per token, the rest grey;
+  with neither, every bar takes the accent.
+
+  Returns {node, update(items)}: update shows new items in the same list.
+*/
+export function topk(target, items, options) {
+  const opts = options || {};
+  const k = opts.k || 8;
+  const fmt = d3.format(opts.format || '.0%');
+  const highlight = new Set([].concat(opts.highlight == null ? [] : opts.highlight).map(String));
+  const named = opts.colors || {};
+  const accent = color(opts.accent || 'intervention');
+  const gray = color('gray');
+  const fillOf = t => {
+    if (named[t]) return color(named[t]);
+    if (highlight.size) return highlight.has(t) ? accent : gray;
+    return Object.keys(named).length ? gray : accent;
+  };
+
+  const root = d3.select(resolve(target)).append('div').attr('class', 'plx-topk');
+  if (opts.title) root.append('div').attr('class', 'plx-topk__title').text(opts.title);
+  const list = root.append('ol').attr('class', 'plx-topk__list');
+
+  const render = data => {
+    const rows = pairs(data || [])
+      .filter(d => d.value != null && isFinite(d.value))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, k);
+    const max = opts.max || (rows.every(d => d.value >= 0 && d.value <= 1) ? 1 : (d3.max(rows, d => d.value) || 1));
+    const li = list.selectAll('li').data(rows, d => d.token).join(enter => {
+      const row = enter.append('li').attr('class', 'plx-topk__row');
+      row.append('span').attr('class', 'plx-topk__rank');
+      row.append('span').attr('class', 'plx-topk__token');
+      row.append('span').attr('class', 'plx-topk__bar').append('span').attr('class', 'plx-topk__fill').style('width', '0%');
+      row.append('span').attr('class', 'plx-topk__value');
+      return row;
+    });
+    li.order();
+    li.classed('is-highlight', d => highlight.has(d.token) || Boolean(named[d.token]));
+    li.select('.plx-topk__rank').text((d, i) => i + 1);
+    li.select('.plx-topk__token').text(d => token(d.token)).attr('title', d => JSON.stringify(d.token));
+    const fill = li.select('.plx-topk__fill').style('background-color', d => fillOf(d.token));
+    const width = d => Math.max(0, Math.min(1, d.value / max)) * 100 + '%';
+    if (reducedMotion()) fill.style('width', width);
+    else fill.transition().duration(220).style('width', width);
+    li.select('.plx-topk__value').text(d => fmt(d.value));
+  };
+
+  render(items);
+  return { node: root.node(), update: render };
 }

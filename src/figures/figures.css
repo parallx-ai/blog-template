@@ -316,6 +316,113 @@
   outline-offset: 2px;
 }
 
+/* Ranked tokens */
+
+.plx-topk {
+  color: var(--plx-chart-ink2);
+  font: 500 13px/1.4 var(--plx-font-body, Inter, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+.plx-topk__title {
+  margin: 0 0 0.55rem;
+  color: var(--plx-ink-1, #303631);
+  font-weight: 600;
+}
+
+.plx-topk__list,
+d-article .plx-topk__list {
+  display: grid;
+  grid-template-columns: auto minmax(3.5rem, max-content) minmax(3rem, 1fr) auto;
+  gap: 0.3rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plx-topk__row,
+d-article .plx-topk__row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  margin: 0;
+}
+
+.plx-topk__rank {
+  color: var(--plx-chart-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+.plx-topk__token {
+  overflow: hidden;
+  color: var(--plx-chart-ink2);
+  font-family: var(--plx-token-font, var(--plx-font-display, Georgia, serif));
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: pre;
+}
+
+.plx-topk__row.is-highlight .plx-topk__token {
+  color: var(--plx-chart-ink);
+  font-weight: 600;
+}
+
+.plx-topk__bar {
+  height: 12px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--plx-chart-grid) 75%, transparent);
+}
+
+.plx-topk__fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.plx-topk__value {
+  min-width: 2.6em;
+  text-align: right;
+}
+
+/* A number to drag */
+
+.plx-drag-number {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 0.12em;
+  border-bottom: 1.5px dotted var(--plx-gold, #c89a2a);
+  border-radius: 2px 2px 0 0;
+  color: var(--plx-gold-ink, #896600);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  text-align: center;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color 120ms ease;
+}
+
+.plx-drag-number:hover,
+.plx-drag-number.is-dragging {
+  background: color-mix(in srgb, var(--plx-gold, #c89a2a) 14%, transparent);
+}
+
+.plx-drag-number:focus-visible {
+  outline: 2px solid var(--plx-gold, #c89a2a);
+  outline-offset: 2px;
+}
+
+html.plx-dragging,
+html.plx-dragging * {
+  cursor: ew-resize !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* Captions that name the colours */
 
 .plx-key {

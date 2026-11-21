@@ -125,6 +125,67 @@ describe("Figures toolkit", function() {
     });
   });
 
+  describe("error bars, ranked tokens and draggable numbers", function() {
+    const { JSDOM } = require("jsdom");
+    const page = () => new JSDOM("<!doctype html><div id='mount'></div>").window.document;
+
+    it("should draw intervals as plxviz's whiskers, or as round lines", function() {
+      const document = page();
+      const c = plx.chart(document.getElementById("mount"), { width: 300, height: 200 });
+      c.x.domain([0, 10]);
+      c.y.domain([0, 1]);
+      const bars = plx.errorBars(c, [[5, 0.4, 0.6], [7, null, 0.5]]);
+      expect(bars.size()).to.equal(1);
+      const x = c.x(5), a = c.y(0.4), b = c.y(0.6);
+      expect(bars.attr("d")).to.equal("M" + x + "," + a + "V" + b + "M" + (x - 4) + "," + a + "H" + (x + 4) +
+        "M" + (x - 4) + "," + b + "H" + (x + 4));
+      expect([bars.attr("stroke"), bars.attr("stroke-width"), bars.attr("stroke-linecap")]).to.deep.equal(["#111411", "1.2", "butt"]);
+      const round = plx.errorBars(c, [[0.5, 2, 8]], {
+        horizontal: true, y: d => c.y(d[0]), lo: d => c.x(d[1]), hi: d => c.x(d[2]), color: "gold", width: 2.2, cap: 0,
+      });
+      expect(round.attr("d")).to.equal("M" + c.x(2) + "," + c.y(0.5) + "H" + c.x(8));
+      expect([round.attr("stroke"), round.attr("stroke-linecap")]).to.deep.equal(["#A37F1F", "round"]);
+    });
+
+    it("should rank tokens and colour them as plxviz's bar charts do", function() {
+      const document = page();
+      const list = plx.topk(document.getElementById("mount"), [[" a", 0.1], [" b", 0.6], [" c", 0.3]],
+        { k: 2, colors: { " b": "second" }, title: "Layer 16" });
+      const read = cls => [].map.call(list.node.querySelectorAll(cls), el => el.textContent);
+      expect(read(".plx-topk__title")).to.deep.equal(["Layer 16"]);
+      expect(read(".plx-topk__token")).to.deep.equal(["\u00b7b", "\u00b7c"]);
+      expect(read(".plx-topk__value")).to.deep.equal(["60%", "30%"]);
+      const fills = [].map.call(list.node.querySelectorAll(".plx-topk__fill"), el => el.style.backgroundColor);
+      expect(fills).to.deep.equal(["rgb(85, 126, 152)", "rgb(190, 197, 191)"]);
+      expect(list.node.querySelector(".plx-topk__row").classList.contains("is-highlight")).to.be.true;
+      list.update([[" c", 0.9], [" d", 0.05]]);
+      expect(read(".plx-topk__token")).to.deep.equal(["\u00b7c", "\u00b7d"]);
+      expect(read(".plx-topk__rank")).to.deep.equal(["1", "2"]);
+    });
+
+    it("should change a draggable number with the keyboard, within its limits", function(done) {
+      const document = page();
+      const window = document.defaultView;
+      const el = document.createElement("span");
+      document.body.appendChild(el);
+      const s = plx.state({ n: 5 });
+      plx.dragNumber(el, { state: s, key: "n", min: 0, max: 10, label: "Layer" });
+      expect([el.textContent, el.getAttribute("role"), el.getAttribute("aria-valuemax")]).to.deep.equal(["5", "slider", "10"]);
+      const press = key => el.dispatchEvent(new window.KeyboardEvent("keydown", { key, bubbles: true }));
+      press("ArrowRight");
+      expect(s.get("n")).to.equal(6);
+      press("PageUp");
+      expect(s.get("n")).to.equal(10);
+      press("Home");
+      press("ArrowDown");
+      expect(s.get("n")).to.equal(0);
+      setTimeout(() => {
+        expect([el.textContent, el.getAttribute("aria-valuenow")]).to.deep.equal(["0", "0"]);
+        done();
+      }, 20);
+    });
+  });
+
   describe("tokens and state", function() {
     it("should show tokens' spaces and breaks", function() {
       expect(plx.token(" the\n")).to.equal("·the↵");

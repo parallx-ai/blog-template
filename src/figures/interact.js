@@ -14,8 +14,8 @@
 
 /*
   Interaction: one shared tooltip, hover and nearest-point readouts, state
-  shared between figures, and two controls (a slider and a set of buttons)
-  bound to that state.
+  shared between figures, and controls bound to that state: a slider, a set
+  of buttons, and a number readers drag.
 */
 
 import * as d3 from 'd3';
@@ -257,4 +257,84 @@ export function toggle(target, options) {
     .on('click', (event, d) => s.set({ [name]: d.value }));
   const off = s.on(values => buttons.attr('aria-pressed', d => String(Object.is(d.value, values[name]))));
   return { node: wrap.node(), remove() { off(); wrap.remove(); } };
+}
+
+/*
+  dragNumber(target, {state, key, min, max, step, format, pixels, label})
+  turns an element, usually an empty <span> in a sentence, into a number the
+  reader drags left or right (one step every `pixels`, 6, pixels) or changes
+  with the arrow keys (Page Up and Page Down for ten steps, Home and End for
+  the ends), bound to state[key]. It is announced as a slider; `label` names
+  it for screen readers. Returns {node, remove()}.
+*/
+export function dragNumber(target, options) {
+  const opts = options || {};
+  const s = opts.state;
+  const name = opts.key;
+  const min = opts.min == null ? -Infinity : opts.min;
+  const max = opts.max == null ? Infinity : opts.max;
+  const step = opts.step || 1;
+  const pixels = opts.pixels || 6;
+  const decimals = (String(step).split('.')[1] || '').length;
+  const fmt = asFormat(opts.format);
+  const el = resolve(target);
+  const root = el.ownerDocument.documentElement;
+  const clamp = v => Math.min(max, Math.max(min, +(Math.round(v / step) * step).toFixed(decimals)));
+
+  el.classList.add('plx-drag-number');
+  el.setAttribute('role', 'slider');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('title', 'Drag, or use the arrow keys');
+  if (opts.label) el.setAttribute('aria-label', opts.label);
+  if (isFinite(min)) el.setAttribute('aria-valuemin', String(min));
+  if (isFinite(max)) el.setAttribute('aria-valuemax', String(max));
+
+  let start = null;
+  // The browser focuses the number itself, as a pointer focus, so no focus ring
+  // shows after a drag; the styles keep the drag from selecting text.
+  const down = event => {
+    if (event.button !== 0) return;
+    if (el.setPointerCapture) el.setPointerCapture(event.pointerId);
+    start = { x: event.clientX, value: s.get(name) };
+    el.classList.add('is-dragging');
+    root.classList.add('plx-dragging');
+  };
+  const move = event => {
+    if (!start) return;
+    s.set({ [name]: clamp(start.value + Math.round((event.clientX - start.x) / pixels) * step) });
+  };
+  const up = () => {
+    if (!start) return;
+    start = null;
+    el.classList.remove('is-dragging');
+    root.classList.remove('plx-dragging');
+  };
+  const key = event => {
+    const v = s.get(name);
+    const keys = {
+      ArrowRight: v + step, ArrowUp: v + step, ArrowLeft: v - step, ArrowDown: v - step,
+      PageUp: v + 10 * step, PageDown: v - 10 * step,
+      Home: isFinite(min) ? min : null, End: isFinite(max) ? max : null,
+    };
+    if (keys[event.key] == null) return;
+    event.preventDefault();
+    s.set({ [name]: clamp(keys[event.key]) });
+  };
+
+  const listeners = [['pointerdown', down], ['pointermove', move], ['pointerup', up], ['pointercancel', up],
+    ['lostpointercapture', up], ['keydown', key]];
+  for (const [type, fn] of listeners) el.addEventListener(type, fn);
+  const off = s.on(values => {
+    el.textContent = fmt(values[name]);
+    el.setAttribute('aria-valuenow', String(values[name]));
+    el.setAttribute('aria-valuetext', el.textContent);
+  });
+  return {
+    node: el,
+    remove() {
+      off();
+      up();
+      for (const [type, fn] of listeners) el.removeEventListener(type, fn);
+    },
+  };
 }

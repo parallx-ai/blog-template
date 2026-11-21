@@ -50,6 +50,12 @@
       stroke-width: 1.5;
     }
 
+    .lens-lists {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1.5rem 2.5rem;
+    }
+
     .probe-explorer__tokens h4 {
       margin: 0 0 0.75rem;
       font: 600 13px/1.4 var(--plx-font-body);
@@ -224,10 +230,10 @@
     <p>Captioned figures are numbered in order, and their captions open with the number. To refer to one, give it an <code>id</code> and link to it with an empty <code>&lt;a class="fig-ref" href="#fig-probe"&gt;&lt;/a&gt;</code>: the template writes in the number, Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a> here. A link to a section becomes its number, as in <a class="fig-ref" href="#code-and-tables"></a> or <a class="fig-ref" href="#appendix-sections"></a>, and a reference that matches nothing reads <a class="fig-ref" href="#fig-missing"></a>, so it is easy to spot.</p>
 
     <h3>Interactive figures</h3>
-    <p>Figures can also be drawn in the browser. <code>figures.v1.js</code>, loaded after the template, bundles <a href="https://d3js.org">d3</a> with helpers in plxviz's style: charts and axes, colours by role, tooltips, state shared between figures and the controls that change it, readers for JSON, CSV, NumPy and Parquet files, and model text shaded token by token. Figure&nbsp;<a class="fig-ref" href="#fig-explorer"></a> is drawn this way, from a Parquet file of accuracies and a NumPy array of scores.</p>
+    <p>Figures can also be drawn in the browser. <code>figures.v1.js</code>, loaded after the template, bundles <a href="https://d3js.org">d3</a> with helpers in plxviz's style: charts with axes and error bars, colours by role, tooltips, state shared between figures and the controls that change it, readers for JSON, CSV, NumPy and Parquet files, model text shaded token by token, and ranked lists of tokens. Figure&nbsp;<a class="fig-ref" href="#fig-explorer"></a> is drawn this way, from a Parquet file of accuracies and a NumPy array of scores.</p>
     <figure id="fig-explorer" class="l-page">
       <div id="probe-explorer"></div>
-      <figcaption>Choose a layer with the slider or by clicking the chart: the exchange is shaded by the probe's score for each token at that layer, blue where it reads the concept and coral where it reads its absence. The control was trained on shuffled labels. Example data, drawn in the browser.</figcaption>
+      <figcaption>Choose a layer with the slider or by clicking the chart: the exchange is shaded by the probe's score for each token at that layer, blue where it reads the concept and coral where it reads its absence. The control was trained on shuffled labels; whiskers show 95% intervals over five seeds. Example data, drawn in the browser.</figcaption>
     </figure>
     <script>
       // One state for the slider, the chart and the text.
@@ -254,13 +260,21 @@
         const line = d3.line().x(d => c.x(d[0])).y(d => c.y(d[1]));
         c.g.appendMany("path", series).at({ d: s => line(s.values), stroke: s => s.color, fill: "none", strokeWidth: 2.25 });
         plx.labelEnds(c, series);
+        // 95% intervals over five seeds, at every fourth layer.
+        for (const s of series) {
+          plx.errorBars(c, rows.filter(r => r.layer % 4 === 0), {
+            x: r => c.x(r.layer), lo: r => c.y(r[s.key + "_lo"]), hi: r => c.y(r[s.key + "_hi"]),
+          });
+        }
         const rule = c.g.append("line.probe-explorer__rule").at({ y1: 0, y2: c.height });
         const dots = c.g.appendMany("circle.probe-explorer__dot", series).at({ r: 4.5, fill: s => s.color });
-        plx.nearest(c, series.flatMap(s => s.values.map(v => ({ s, v }))), {
-          x: d => c.x(d.v[0]),
-          y: d => c.y(d.v[1]),
-          html: d => "<b>Layer " + d.v[0] + "</b><br><span class='plx-swatch' style='background:" + d.s.color +
-            "'></span>" + d.s.name + ": " + d3.format(".0%")(d.v[1]),
+        const pct = d3.format(".0%");
+        plx.nearest(c, series.flatMap(s => rows.map(r => ({ s, r }))), {
+          x: d => c.x(d.r.layer),
+          y: d => c.y(d.r[d.s.key]),
+          html: d => "<b>Layer " + d.r.layer + "</b><br><span class='plx-swatch' style='background:" + d.s.color +
+            "'></span>" + d.s.name + ": " + pct(d.r[d.s.key]) +
+            " (" + pct(d.r[d.s.key + "_lo"]) + "\u2013" + pct(d.r[d.s.key + "_hi"]) + ")",
         });
         c.svg.on("click", event => {
           const layer = Math.round(c.x.invert(d3.pointer(event, c.g.node())[0]));
@@ -296,6 +310,37 @@
         context.watch(probeLayer, ({ layer }) => { /* move the marker, recolour the tokens */ });
       });
     </d-code>
+    <p>Text can follow the same state. Drag the number in this sentence, or select it and use the arrow keys: at layer <span id="layer-number">16</span>, the linear probe is right <span id="layer-probe">88%</span> of the time and the control <span id="layer-control">51%</span>, and the likeliest next token after &ldquo;All the tests&rdquo; is <span id="layer-next">&ldquo;failed&rdquo;</span>. Figures&nbsp;<a class="fig-ref" href="#fig-explorer"></a> and <a class="fig-ref" href="#fig-lens"></a> move with it.</p>
+    <script>
+      plx.dragNumber("#layer-number", { state: probeLayer, key: "layer", min: 0, max: 32, label: "Layer" });
+      Promise.all([plx.load("data/probe-layers.parquet"), plx.load("data/logit-lens.json")]).then(([rows, lens]) => {
+        const pct = d3.format(".0%");
+        probeLayer.on(({ layer }) => {
+          d3.select("#layer-probe").text(pct(rows[layer].probe));
+          d3.select("#layer-control").text(pct(rows[layer].shuffled));
+          d3.select("#layer-next").text("\u201c" + lens.layers[layer][0][0].trim() + "\u201d");
+        });
+      });
+    </script>
+    <figure id="fig-lens" class="l-body-outset">
+      <div id="lens-lists"></div>
+      <figcaption>The likeliest next tokens after &ldquo;Assistant: All the tests&rdquo;, read from the chosen layer with a logit lens, and at the last layer. Midway through, the model leans towards failed before it says passed. Example data.</figcaption>
+    </figure>
+    <script>
+      plx.figure("#lens-lists", async mount => {
+        const lens = await plx.load("data/logit-lens.json");
+        const colors = { " failed": "intervention", " passed": "second" };
+        const layout = d3.select(mount).append("div.lens-lists");
+        const chosen = plx.topk(layout.append("div"), [], { colors, title: "Layer 16" });
+        plx.topk(layout.append("div"), lens.layers[32], { colors, title: "Last layer (32)" });
+        const title = d3.select(chosen.node).select(".plx-topk__title");
+        return probeLayer.on(({ layer }) => {
+          title.text("Layer " + layer);
+          chosen.update(lens.layers[layer]);
+        });
+      });
+      plx.captionKey("#fig-lens", { failed: "gold", passed: "blue" });
+    </script>
 
     <h2>Notes, citations and maths</h2>
     <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected at the end of the page. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>

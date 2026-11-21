@@ -14,8 +14,8 @@
 
 /*
   Chart scaffolding in plxviz's style: an SVG with margins and scales, axes
-  with light gridlines, a stepped colour bar, and labels at the ends of lines
-  in place of a legend.
+  with light gridlines, error bars, a stepped colour bar, and labels at the
+  ends of lines in place of a legend.
 */
 
 import * as d3 from 'd3';
@@ -131,6 +131,48 @@ export function labelEnds(c, list, options) {
     .attr('dy', '0.35em')
     .attr('fill', d => readable(d.color, P.surfaces.background, 3))
     .text(d => d.name);
+}
+
+/*
+  errorBars(c, data, {x, lo, hi, color, width, cap, horizontal}) draws an
+  interval for each datum. By default it looks like plxviz's whiskers on bars:
+  an ink line 1.2 pixels wide with 4-pixel caps. {color, width: 2.2, cap: 0}
+  gives the coloured, round-ended interval of plxviz's dot plots. x, lo and hi
+  give positions in pixels (by default d => c.x(d[0]), d => c.y(d[1]) and
+  d => c.y(d[2])); with horizontal: true, y places the row and lo and hi run
+  along x. color may be a function of the datum. Data whose ends are missing
+  are skipped. Returns the paths.
+*/
+export function errorBars(c, data, options) {
+  const opts = options || {};
+  const horizontal = Boolean(opts.horizontal);
+  const at = (horizontal ? opts.y : opts.x) || (horizontal ? d => c.y(d[0]) : d => c.x(d[0]));
+  const lo = opts.lo || (horizontal ? d => c.x(d[1]) : d => c.y(d[1]));
+  const hi = opts.hi || (horizontal ? d => c.x(d[2]) : d => c.y(d[2]));
+  const cap = opts.cap == null ? 4 : opts.cap;
+  const width = opts.width == null ? 1.2 : opts.width;
+  const stroke = typeof opts.color === 'function'
+    ? d => color(opts.color(d))
+    : () => color(opts.color || P.ink.ink);
+  const shape = d => {
+    const p = at(d);
+    const a = lo(d);
+    const b = hi(d);
+    if (horizontal) {
+      return 'M' + a + ',' + p + 'H' + b +
+        (cap ? 'M' + a + ',' + (p - cap) + 'V' + (p + cap) + 'M' + b + ',' + (p - cap) + 'V' + (p + cap) : '');
+    }
+    return 'M' + p + ',' + a + 'V' + b +
+      (cap ? 'M' + (p - cap) + ',' + a + 'H' + (p + cap) + 'M' + (p - cap) + ',' + b + 'H' + (p + cap) : '');
+  };
+  const drawn = data.filter(d => [at(d), lo(d), hi(d)].every(v => v != null && isFinite(v)));
+  return c.g.append('g').attr('class', 'plx-error-bars').selectAll('path').data(drawn).enter().append('path')
+    .attr('class', 'plx-error-bar')
+    .attr('d', shape)
+    .attr('fill', 'none')
+    .attr('stroke', stroke)
+    .attr('stroke-width', width)
+    .attr('stroke-linecap', cap ? 'butt' : 'round');
 }
 
 /*
