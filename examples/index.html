@@ -19,9 +19,43 @@
 <head>
   <meta charset="utf-8">
   <script src="template.v2.js"></script>
+  <script src="figures.v1.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Writing for Parallax</title>
   <style>
+    /* The interactive figure: chart and tokens side by side when there is
+       room, stacked otherwise. */
+    .probe-explorer {
+      display: grid;
+      gap: 1.25rem 2.5rem;
+    }
+
+    .probe-explorer.is-wide {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      align-items: start;
+    }
+
+    .probe-explorer__controls {
+      grid-column: 1 / -1;
+    }
+
+    .probe-explorer__rule {
+      stroke: var(--plx-chart-ink2);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+    }
+
+    .probe-explorer__dot {
+      stroke: var(--plx-cream);
+      stroke-width: 1.5;
+    }
+
+    .probe-explorer__tokens h4 {
+      margin: 0 0 0.75rem;
+      font: 600 13px/1.4 var(--plx-font-body);
+      color: var(--plx-ink-1);
+    }
+
     /* An inline SVG figure drawn with the template's colour tokens, so it
        matches the page. */
     .parallax-diagram {
@@ -189,6 +223,80 @@
     <h3>Cross-references</h3>
     <p>Captioned figures are numbered in order, and their captions open with the number. To refer to one, give it an <code>id</code> and link to it with an empty <code>&lt;a class="fig-ref" href="#fig-probe"&gt;&lt;/a&gt;</code>: the template writes in the number, Figure&nbsp;<a class="fig-ref" href="#fig-probe"></a> here. A link to a section becomes its number, as in <a class="fig-ref" href="#code-and-tables"></a> or <a class="fig-ref" href="#appendix-sections"></a>, and a reference that matches nothing reads <a class="fig-ref" href="#fig-missing"></a>, so it is easy to spot.</p>
 
+    <h3>Interactive figures</h3>
+    <p>Figures can also be drawn in the browser. <code>figures.v1.js</code>, loaded after the template, bundles <a href="https://d3js.org">d3</a> with helpers in plxviz's style: charts and axes, colours by role, tooltips, state shared between figures and the controls that change it, readers for JSON, CSV, NumPy and Parquet files, and model text shaded token by token. Figure&nbsp;<a class="fig-ref" href="#fig-explorer"></a> is drawn this way, from a Parquet file of accuracies and a NumPy array of scores.</p>
+    <figure id="fig-explorer" class="l-page">
+      <div id="probe-explorer"></div>
+      <figcaption>Choose a layer with the slider or by clicking the chart: the exchange is shaded by the probe's score for each token at that layer, blue where it reads the concept and coral where it reads its absence. The control was trained on shuffled labels. Example data, drawn in the browser.</figcaption>
+    </figure>
+    <script>
+      // One state for the slider, the chart and the text.
+      const probeLayer = plx.state({ layer: 16 });
+
+      plx.figure("#probe-explorer", async (mount, context) => {
+        const [rows, tokens, scores] = await Promise.all([
+          plx.load("data/probe-layers.parquet"),
+          plx.load("data/tokens.json"),
+          plx.load("data/token-scores.npy"),
+        ]);
+        const color = plx.roles({ intervention: "Linear probe", control: "Shuffled labels" });
+        const layout = d3.select(mount).append("div.probe-explorer").classed("is-wide", context.width >= 760);
+        plx.slider(layout.append("div.probe-explorer__controls"),
+          { state: probeLayer, key: "layer", min: 0, max: 32, label: "Layer" });
+
+        // Accuracy by layer, with the chosen layer marked.
+        const c = plx.chart(layout.append("div"), { height: 270, margin: { right: 112 } });
+        c.x.domain([0, 32]);
+        c.y.domain([0.4, 1]);
+        plx.axes(c, { xLabel: "Layer", yLabel: "Accuracy", yFormat: ".0%", xTickValues: [0, 8, 16, 24, 32] });
+        const series = [["Linear probe", "probe"], ["Shuffled labels", "shuffled"]].map(([name, key]) =>
+          ({ name, key, color: color(name), values: rows.map(r => [r.layer, r[key]]) }));
+        const line = d3.line().x(d => c.x(d[0])).y(d => c.y(d[1]));
+        c.g.appendMany("path", series).at({ d: s => line(s.values), stroke: s => s.color, fill: "none", strokeWidth: 2.25 });
+        plx.labelEnds(c, series);
+        const rule = c.g.append("line.probe-explorer__rule").at({ y1: 0, y2: c.height });
+        const dots = c.g.appendMany("circle.probe-explorer__dot", series).at({ r: 4.5, fill: s => s.color });
+        plx.nearest(c, series.flatMap(s => s.values.map(v => ({ s, v }))), {
+          x: d => c.x(d.v[0]),
+          y: d => c.y(d.v[1]),
+          html: d => "<b>Layer " + d.v[0] + "</b><br><span class='plx-swatch' style='background:" + d.s.color +
+            "'></span>" + d.s.name + ": " + d3.format(".0%")(d.v[1]),
+        });
+        c.svg.on("click", event => {
+          const layer = Math.round(c.x.invert(d3.pointer(event, c.g.node())[0]));
+          probeLayer.set({ layer: Math.max(0, Math.min(32, layer)) });
+        });
+
+        // The exchange, shaded by the probe's score at the chosen layer.
+        const panel = layout.append("div.probe-explorer__tokens");
+        const heading = panel.append("h4");
+        const text = plx.tokens(panel, tokens.map(t => [t, 0]), { domain: [-1, 1], label: "Probe score" });
+
+        context.watch(probeLayer, ({ layer }) => {
+          rule.at({ x1: c.x(layer), x2: c.x(layer) });
+          dots.at({ cx: c.x(layer), cy: s => c.y(rows[layer][s.key]) });
+          heading.text("Probe scores at layer " + layer);
+          text.update(tokens.map((t, i) => scores.get(layer, i)));
+        });
+      });
+
+      plx.captionKey("#fig-explorer", { "probe's": "gold", "shuffled labels": { bg: "control" } });
+    </script>
+    <p>The figure is a short script in the page. <code>plx.figure</code> draws it when it comes into view, and again when its width changes; <code>plx.load</code> reads each file once; one <code>plx.state</code> links the slider, the chart and the text:</p>
+    <d-code block language="javascript">
+      const probeLayer = plx.state({ layer: 16 });
+
+      plx.figure("#probe-explorer", async (mount, context) => {
+        const rows = await plx.load("data/probe-layers.parquet");
+        const c = plx.chart(mount, { height: 270 });
+        c.x.domain([0, 32]);
+        c.y.domain([0.4, 1]);
+        plx.axes(c, { xLabel: "Layer", yFormat: ".0%" });
+        // ...lines, a tooltip with plx.nearest, the text with plx.tokens...
+        context.watch(probeLayer, ({ layer }) => { /* move the marker, recolour the tokens */ });
+      });
+    </d-code>
+
     <h2>Notes, citations and maths</h2>
     <p>Citations come from a BibTeX bibliography and appear as numbered references<d-cite key="olah2020zoom"></d-cite> with a preview on hover, collected at the end of the page. Footnotes work the same way<d-footnote>Footnotes open in a panel styled like the website's reading menu, and are listed at the end of the article. They can hold maths, <d-math>\sigma(Wx + b)</d-math>, and citations<d-cite key="elhage2021mathematical"></d-cite>.</d-footnote>.</p>
     <p>Inline maths uses KaTeX, either with the <code>&lt;d-math&gt;</code> element, as in <d-math>h_\ell = f_\ell(h_{\ell-1})</d-math>, or with the delimiters configured in the front matter, as in $$\hat{y} = \mathrm{softmax}(W h_\ell)$$. Display maths is set on its own line:</p>
@@ -241,7 +349,7 @@
     </table>
 
     <h2>Publishing</h2>
-    <p>Serve the contents of <code>dist/</code> together: <code>template.v2.js</code> loads Inter from the <code>fonts/</code> folder next to it, so no third-party font service is contacted. Beyond the usual title, description, date and authors, the front matter accepts a few optional keys:</p>
+    <p>Serve the contents of <code>dist/</code> together: <code>template.v2.js</code> loads Inter from the <code>fonts/</code> folder next to it, so no third-party font service is contacted, and <code>figures.v1.js</code> sits beside it for articles with interactive figures. Beyond the usual title, description, date and authors, the front matter accepts a few optional keys:</p>
     <ol>
       <li><code>url</code>, the article's canonical address, used in the citation;</li>
       <li><code>journal</code>, to cite the article under a name other than Parallax;</li>

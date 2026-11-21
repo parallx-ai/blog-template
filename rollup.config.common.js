@@ -1,5 +1,6 @@
 // Copyright 2018 The Distill Template Authors
-// Modifications copyright 2026 Parallax: inline brand images, ship fonts.
+// Modifications copyright 2026 Parallax: inline brand images, ship fonts,
+// load plxviz's palette.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,11 +51,20 @@ function copyFonts({ from = "src/assets/fonts/inter", to = "dist/fonts" } = {}) 
   };
 }
 
-// uncomment to show dependencies [1/2]
-// import rollupGrapher from 'rollup-plugin-grapher'
+// plxviz's palette (src/figures/palette.json) gives the --plx-chart-* properties.
+function json() {
+  return {
+    name: "parallax-json",
+    transform(code, id) {
+      if (path.extname(id) !== ".json") return null;
+      return { code: "export default " + code.trim() + ";", map: { mappings: "" } };
+    }
+  };
+}
 
 const defaultConfig = {
   plugins: [
+    json(),
     dataURI(),
     copyFonts(),
     resolve({

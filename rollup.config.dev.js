@@ -1,4 +1,5 @@
 // Copyright 2018 The Distill Template Authors
+// Modifications copyright 2026 Parallax: also watch the figures toolkit.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +15,24 @@
 
 import configs from "./rollup.config.common";
 import serve from "rollup-plugin-serve";
+import { spawn } from "child_process";
 
 const [componentsConfig, transformsConfig] = configs;
+
+// The figures toolkit is built by esbuild (bin/build-figures.js); watch it too.
+let figuresWatch = null;
+function watchFigures() {
+  return {
+    name: "parallax-watch-figures",
+    buildStart() {
+      if (figuresWatch) return;
+      figuresWatch = spawn(process.execPath, ["bin/build-figures.js", "--watch"], { stdio: "inherit" });
+      process.on("exit", () => figuresWatch.kill());
+    }
+  };
+}
+
+componentsConfig.plugins.push(watchFigures());
 
 componentsConfig.plugins.push(
   serve({

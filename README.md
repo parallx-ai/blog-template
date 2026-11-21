@@ -62,6 +62,55 @@ Parallax additions:
 
   Place it after `d-title`. Each card shows the section's number and, unless the link has its own text, the section's title. Pictures are fitted into a 3:2 frame; up to six cards share a row on wide screens.
 
+## Interactive figures
+
+`figures.v1.js` is an optional toolkit for figures drawn in the browser. Load it after the template, from the same folder:
+
+```html
+<script src="template.v2.js"></script>
+<script src="figures.v1.js"></script>
+```
+
+It defines `plx`, and `d3` if the page has none, and draws in plxviz's colours:
+
+```html
+<figure id="fig-layers" class="l-page">
+  <div id="layers"></div>
+  <figcaption>Accuracy of the probe by layer.</figcaption>
+</figure>
+<script>
+  const chosen = plx.state({ layer: 16 });
+
+  plx.figure("#layers", async (mount, context) => {
+    const rows = await plx.load("data/probe.parquet");
+    const c = plx.chart(mount, { height: 280 });
+    c.x.domain([0, 32]);
+    c.y.domain([0.4, 1]);
+    plx.axes(c, { xLabel: "Layer", yLabel: "Accuracy", yFormat: ".0%" });
+    // ...draw with d3, then follow the state:
+    context.watch(chosen, ({ layer }) => { /* move a marker */ });
+  });
+</script>
+```
+
+| Functions | What they do |
+| --- | --- |
+| `plx.figure(mount, draw)` | Draws when the figure comes into view (or is printed), and again when its width changes. `draw(mount, context)` may be async; `context.watch(state, fn)` follows a state for as long as that drawing lasts. Errors show in place of the figure. |
+| `plx.chart`, `plx.axes`, `plx.labelEnds`, `plx.colorbar` | An SVG with margins and scales; axes with light gridlines; line names at their ends instead of a legend; a stepped colour bar. |
+| `plx.color`, `plx.roles`, `plx.series`, `plx.ramp`, `plx.tint`, `plx.textOn` | plxviz's colours: by name or by role (`roles({control: "Base", intervention: "Steered"})`), the series order, the ordered ramp, pale tints, readable text on a fill. |
+| `plx.sequential`, `plx.diverging`, `plx.tone` | plxviz's heatmap scales. |
+| `plx.tooltip`, `plx.hover`, `plx.nearest` | One tooltip for the page, readouts on hover, and the point nearest the pointer. |
+| `plx.state`, `plx.slider`, `plx.toggle` | State shared between figures, and controls bound to it. |
+| `plx.load`, `plx.npy`, `plx.parquet` | Files read once per page and parsed by extension: JSON, CSV and TSV (typed), text, NumPy `.npy` (floats from 16 to 64 bits, integers, booleans) and Parquet (rows as objects; Snappy or uncompressed, the pandas and pyarrow defaults). |
+| `plx.tokens`, `plx.token` | Model text shaded token by token as plxviz draws it, with a colour bar and a tooltip per token; `update(values)` recolours it. |
+| `plx.fit`, `plx.captionKey`, `plx.lazy` | Scale a fixed-size figure to its column; colour words of a caption to serve as its legend; run something when an element comes into view. |
+
+D3 selections also get a few shortcuts: `append("div.note")` with classes and an id, `at({...})` and `st({...})` for several attributes or styles at once, `translate([x, y])` and `appendMany(tag, data)`.
+
+The colours come from plxviz: `src/figures/palette.json` is a copy of plxviz's `docs/palette.json` (`viz colors --json`). When plxviz's palette changes, run `node bin/sync-palette.js path/to/plxviz` and rebuild; the tests check the colour formulas against reference values computed by plxviz. Every page made with the template also has these colours as CSS properties, `--plx-chart-gold`, `--plx-chart-control`, `--plx-chart-grid` and so on, with or without the toolkit.
+
+The file name carries the major version, so published articles keep working: changes that could break existing figures go into `figures.v2.js`. Figure 3 of `examples/index.html` uses most of the toolkit; `examples/data/make_data.py` writes its data.
+
 ## Design tokens
 
 All colours and fonts are CSS custom properties (`src/styles/parallax-tokens.css`), mirrored from the website's `global.css` and namespaced with `--plx-`. Articles can use them in their own CSS and SVG.
@@ -85,6 +134,8 @@ All colours and fonts are CSS custom properties (`src/styles/parallax-tokens.css
 
 `--plx-gold-ink` is the one deliberate departure from the website: the site's `#a37f1f` reaches 3.3:1 on cream, below WCAG AA for running text, so link text uses a darker gold (4.7:1) while underlines and accents keep the site's gold.
 
+Charts use plxviz's palette, as `--plx-chart-*` properties (see [Interactive figures](#interactive-figures)).
+
 Names, links, the legal line and the logos live in `src/distill-components/parallax-brand.js`; keep it in sync with `SiteNav.astro` and `SiteFooter.astro` on the website.
 
 ## Local development
@@ -96,12 +147,14 @@ npm run build  # one-off build into dist/
 npm test
 ```
 
+The template is built with Rollup; the figures toolkit, `src/figures/`, with esbuild (`bin/build-figures.js`), because d3 and hyparquet need a newer JavaScript parser. Both run in `npm run dev` and `npm run build`.
+
 ## Deploying
 
-Serve the contents of `dist/` together: `template.v2.js` plus the `fonts/` folder next to it. The template loads Inter from that folder, relative to its own URL, so no third-party font service is contacted (fonts are sent with CORS headers by GitHub Pages and most static hosts). The logos are bundled into the script.
+Serve the contents of `dist/` together: `template.v2.js` plus the `fonts/` folder next to it, and `figures.v1.js` for articles with interactive figures. The template loads Inter from that folder, relative to its own URL, so no third-party font service is contacted (fonts are sent with CORS headers by GitHub Pages and most static hosts). The logos are bundled into the script.
 
 KaTeX and the polyfills for very old browsers are still loaded from distill.pub, as in the upstream template.
 
 ## Licences
 
-The code is the Distill template's, under the [Apache License 2.0](LICENSE); files changed for Parallax say so in their headers. Inter is under the SIL Open Font License (`src/assets/fonts/inter/OFL.txt`). The Parallax name, wordmark and mark in `src/assets/parallax/` belong to Parallax and are not covered by the Apache License.
+The code is the Distill template's, under the [Apache License 2.0](LICENSE); files changed for Parallax say so in their headers. Inter is under the SIL Open Font License (`src/assets/fonts/inter/OFL.txt`). `figures.v1.js` bundles d3 (ISC, with d3-ease under BSD-3-Clause) and hyparquet (MIT); their licences are at the end of the file. The Parallax name, wordmark and mark in `src/assets/parallax/` belong to Parallax and are not covered by the Apache License.

@@ -144,6 +144,10 @@ figure img {
   width: 100%;
 }
 
+figure > figcaption {
+  margin-top: 0.75rem;
+}
+
 figcaption,
 .figcaption {
   font-family: var(--plx-font-body);
